@@ -85,6 +85,10 @@ public class WorldController {
 			moveSelectedSprite(0, -sprMoveSpeed);
 	}
 	
+	private void moveSelectedSprite (float x, float y) {
+		testSprites[selectedSprite].translate(x,  y);
+	}
+	
 	private void updateTestObjects (float deltaTime) {
 		// Get current rotation from selected sprite
 		float rotation = testSprites[selectedSprite].getRotation();
