@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
+import com.mygdx.game.CameraHelper;
 
 public class WorldController extends InputAdapter {
 	private static final String TAG =
@@ -15,6 +16,7 @@ public class WorldController extends InputAdapter {
 	
 	public Sprite[] testSprites;
 	public int selectedSprite;
+	public CameraHelper cameraHelper;
 	
 	public WorldController () {
 		init();
@@ -37,6 +39,7 @@ public class WorldController extends InputAdapter {
 	
 	private void init () {
 		Gdx.input.setInputProcessor(this);
+		cameraHelper = new CameraHelper();
 		initTestObjects();
 	}
 	
@@ -85,6 +88,7 @@ public class WorldController extends InputAdapter {
 	public void update (float deltaTime) {
 		handleDebugInput(deltaTime);
 		updateTestObjects(deltaTime);
+		cameraHelper.update(deltaTime);
 	}
 	
 	private void handleDebugInput (float deltaTime) {
