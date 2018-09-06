@@ -32,7 +32,16 @@ public class WorldController extends InputAdapter {
 		// Select next sprite
 		else if (keycode == Keys.SPACE) {
 			selectedSprite = (selectedSprite + 1) % testSprites.length;
+			// Update camerea's target to follow the currently selected sprite
+			if (cameraHelper.hasTarget()) {
+				cameraHelper.setTarget((testSprites[selectedSprite]));
+			}
 			Gdx.app.debug(TAG, "Sprite #" + selectedSprite + " selected");
+		}
+		// Toggle camera follow
+		else if (keycode == Keys.ENTER) {
+			cameraHelper.setTarget(cameraHelper.hasTarget() ? null : testSprites[selectedSprite]);
+			Gdx.app.debug(TAG, "Camera follow enabled: " + cameraHelper.hasTarget());
 		}
 		return false;
 	}
