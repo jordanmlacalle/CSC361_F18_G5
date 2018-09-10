@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.packtpub.libgdx.canyonbunny.game;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -6,10 +6,10 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.packtpub.libgdx.canyonbunny.util.CameraHelper;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
-import com.mygdx.game.CameraHelper;
 
 public class WorldController extends InputAdapter {
 	private static final String TAG =
