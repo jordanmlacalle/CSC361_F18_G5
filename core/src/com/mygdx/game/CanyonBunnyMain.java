@@ -5,7 +5,7 @@ import com.mygdx.game.WorldController;
 import com.mygdx.game.WorldRenderer;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 
 public class CanyonBunnyMain implements ApplicationListener {
   private static final String TAG = CanyonBunnyMain.class.getName();
@@ -35,7 +35,7 @@ public class CanyonBunnyMain implements ApplicationListener {
 	    // Sets the clear screen color to: Cornflower Blue
 	    Gdx.gl.glClearColor(0x64/255.0f, 0x95/255.0f, 0xed/255.0f, 0xff/255.0f);
 	    // Clears the screen
-	    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+	    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	    // Render game world to screen
 	    worldRenderer.render();
   }
