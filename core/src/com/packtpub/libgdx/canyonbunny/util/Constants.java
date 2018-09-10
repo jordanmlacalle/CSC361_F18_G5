@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.packtpub.libgdx.canyonbunny.util;
 
 public class Constants {
 	  // Visible game world is 5 meters wide
