@@ -61,7 +61,24 @@ public class Assets implements Disposable, AssetErrorListener {
         public final AtlasRegion middle;
         
         public AssetRock (TextureAtlas atlas) {
-            
+            edge = atlas.findRegion("rock_edge");
+            middle = atlas.findRegion("rock_middle");
+        }
+    }
+    
+    public class AssetGoldCoin {
+        public final AtlasRegion goldCoin;
+        
+        public AssetGoldCoin (TextureAtlas atlas) {
+            goldCoin = atlas.findRegion("item_gold_coin");
+        }
+    }
+    
+    public class AssetFeather {
+        public final AtlasRegion feather;
+        
+        public AssetFeather (TextureAtlas atlas) {
+            feather = atlas.findRegion("item_feather");
         }
     }
 }
