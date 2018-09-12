@@ -47,4 +47,21 @@ public class Assets implements Disposable, AssetErrorListener {
     public void error (AssetDescriptor asset, Throwable throwable) {
         Gdx.app.error(TAG, "Couldn't load asset '" + asset.fileName + "'", (Exception)throwable);
     }
+    
+    public class AssetBunny {
+        public final AtlasRegion head;
+        
+        public AssetBunny (TextureAtlas atlas) {
+            head = atlas.findRegion("bunny_head");
+        }
+    }
+    
+    public class AssetRock {
+        public final AtlasRegion edge;
+        public final AtlasRegion middle;
+        
+        public AssetRock (TextureAtlas atlas) {
+            
+        }
+    }
 }
