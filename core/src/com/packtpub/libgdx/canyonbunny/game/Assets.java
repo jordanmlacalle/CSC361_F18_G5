@@ -42,7 +42,7 @@ public class Assets implements Disposable, AssetErrorListener {
             Gdx.app.debug(TAG, "asset: " + a);
         }
         
-        TextureAtlas atlas = asseManager.get(Constants.TEXTURE_ATLAS_OBJECTS);
+        TextureAtlas atlas = assetManager.get(Constants.TEXTURE_ATLAS_OBJECTS);
         
         // enable texture filtering for pixel smoothing
         for (Texture t : atlas.getTextures()) {
@@ -62,10 +62,11 @@ public class Assets implements Disposable, AssetErrorListener {
         assetManager.dispose();
     }
     
+    /* This method signature not present in AssetErrorListener...
     @Override
-    public void error (String ffilename, Class type, Throwable throwable) {
+    public void error (String filename, Class type, Throwable throwable) {
         Gdx.app.error(TAG, "Couldn't load asset '" + filename + "'", (Exception)throwable);
-    }
+    }*/
     
     @Override
     public void error (AssetDescriptor asset, Throwable throwable) {
