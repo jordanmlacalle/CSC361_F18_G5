@@ -62,10 +62,11 @@ public class Assets implements Disposable, AssetErrorListener {
         assetManager.dispose();
     }
     
+    /* This method signature not present in AssetErrorListener...
     @Override
     public void error (String filename, Class type, Throwable throwable) {
         Gdx.app.error(TAG, "Couldn't load asset '" + filename + "'", (Exception)throwable);
-    }
+    }*/
     
     @Override
     public void error (AssetDescriptor asset, Throwable throwable) {
