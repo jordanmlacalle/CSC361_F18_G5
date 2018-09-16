@@ -36,7 +36,7 @@ public class Mountains {
     
     /**
      * Draws a single Mountain
-     * @param batch the batch of sprites to use
+     * @param batch SpriteBatch used to draw the Mountain
      * @param offsetX the offset along the x axis
      * @param offsetY the offset along the y axis
      * @param tintColor the tint of the mountain
@@ -69,7 +69,7 @@ public class Mountains {
     /**
      * Implementation of the inherited render method (from AbstractGameObject).
      * Renders a set of three Mountains with different tints and offsets. 
-     * @param batch the batch of sprites to render
+     * @param batch SpriteBatch used to draw the Mountains
      */
     @Override
     public void render (SpriteBatch batch) {
