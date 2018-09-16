@@ -48,7 +48,7 @@ public class Rock extends AbstractGameObject{
     /**
      * Implementation of the inherited render method (from AbstractGameObject).
      * Renders regEdge and regMiddle texture regions to draw this Rock.
-     * @param batch the batch of sprites to render
+     * @param batch SpriteBatch used to draw the Rock
      */
     @Override
     public void render (SpriteBatch batch) {
