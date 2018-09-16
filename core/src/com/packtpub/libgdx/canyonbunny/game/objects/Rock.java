@@ -77,6 +77,11 @@ public class Rock extends AbstractGameObject{
         }
         
         // Draw right edge
+        reg = regEdge;
+        batch.draw(reg.getTexture(), position.x + relX, position.y + relY,
+                origin.x + dimension.x / 8, origin.y, dimension.x / 4, dimension.y, scale.x,  scale.y,
+                rotation, reg.getRegionX(), reg.getRegionY(),
+                reg.getRegionWidth(), reg.getRegionHeight(), true, false);
         }
         
     }
