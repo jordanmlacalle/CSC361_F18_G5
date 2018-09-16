@@ -143,6 +143,9 @@ public class Level {
         
         // Draw Water Overlay
         waterOverlay.render(batch);
+        
+        // Draw clouds
+        clouds.render(batch);
     }
 
 }
