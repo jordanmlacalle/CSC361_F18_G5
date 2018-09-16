@@ -7,6 +7,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.packtpub.libgdx.canyonbunny.game.Assets;
 
+/**
+ * The Clouds class acts as a container for all of the Cloud objects in a level
+ * @author Jordan
+ *
+ */
 public class Clouds extends AbstractGameObject {
     
     private float length;
