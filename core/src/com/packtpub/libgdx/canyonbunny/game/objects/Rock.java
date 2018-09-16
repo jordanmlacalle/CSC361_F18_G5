@@ -44,4 +44,40 @@ public class Rock extends AbstractGameObject{
     public void increaseLength (int amount) {
         setLength(length + amount);
     }
+    
+    /**
+     * Implementation of the inherited render method (from AbstractGameObject).
+     * Renders regEdge and regMiddle texture regions to draw this Rock.
+     * @param batch the batch of sprites to render
+     */
+    @Override
+    public void render (SpriteBatch batch) {
+        TextureRegion reg = null;
+        
+        float relX = 0;
+        float relY = 0;
+        
+        // Draw left edge
+        reg = regEdge;
+        relX -= dimension.x / 4;
+        batch.draw(reg.getTexture(), position.x + relX, position.y + relY, 
+                origin.x, origin.y, dimension.x / 4, dimension.y, scale.x, scale.y,
+                rotation, reg.getRegionX(), reg.getRegionY(),
+                reg.getRegionWidth(), reg.getRegionHeight(), false, false);
+        
+        // Draw middle
+        relX = 0;
+        reg = regMiddle;
+        for (int i = 0; i < length; i++) {
+            batch.draw(reg.getTexture(), position.x, position.y, 
+                    origin.x, origin.y, dimension.x, dimension.y, scale.x, scale.y,
+                    rotation, reg.getRegionX(), reg.getRegionY(),
+                    reg.getRegionWidth(), reg.getRegionHeight(), false, false);
+            relX += dimension.x;
+        }
+        
+        // Draw right edge
+        }
+        
+    }
 }
