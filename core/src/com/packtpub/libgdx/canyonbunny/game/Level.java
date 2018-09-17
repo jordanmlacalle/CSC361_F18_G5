@@ -79,7 +79,7 @@ public class Level {
         int lastPixel = -1;
         for (int pixelY = 0; pixelY < pixmap.getHeight(); pixelY++) {
             for (int pixelX = 0; pixelX < pixmap.getWidth(); pixelX++) {
-                AbstractGameObject = null;
+                AbstractGameObject obj = null;
                 float offsetHeight = 0;
                 // height grows from bottom to top
                 float baseHeight = pixmap.getHeight() - pixelY;
