@@ -1,22 +1,34 @@
 package com.packtpub.libgdx.canyonbunny.game;
 
+import com.packtpub.libgdx.canyonbunny.util.CameraHelper;
+import com.packtpub.libgdx.canyonbunny.game.objects.Rock;
+import com.packtpub.libgdx.canyonbunny.util.Constants;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.packtpub.libgdx.canyonbunny.util.CameraHelper;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
-
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+
+
 
 public class WorldController extends InputAdapter {
 	private static final String TAG =
 			WorldController.class.getName();
+	
+	/**
+	 * level - the current level
+	 * lives - the number of lives remaining
+	 * score - the current score
+	 */
+	public Level level;
+	public int lives;
+	public int score;
 	
 	public CameraHelper cameraHelper;
 	
@@ -31,30 +43,28 @@ public class WorldController extends InputAdapter {
 			init();
 			Gdx.app.debug(TAG,  "Game world resetted");
 		}
-		// Select next sprite
-		else if (keycode == Keys.SPACE) {
-			selectedSprite = (selectedSprite + 1) % testSprites.length;
-			// Update camerea's target to follow the currently selected sprite
-			if (cameraHelper.hasTarget()) {
-				cameraHelper.setTarget((testSprites[selectedSprite]));
-			}
-			Gdx.app.debug(TAG, "Sprite #" + selectedSprite + " selected");
-		}
-		// Toggle camera follow
-		else if (keycode == Keys.ENTER) {
-			cameraHelper.setTarget(cameraHelper.hasTarget() ? null : testSprites[selectedSprite]);
-			Gdx.app.debug(TAG, "Camera follow enabled: " + cameraHelper.hasTarget());
-		}
 		return false;
 	}
 	
+	/**
+	 * Initialize the required resources for the WorldController
+	 */
 	private void init () {
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
-		initTestObjects();
+		lives = Constants.LIVES_START;
+		initLevel();
 	}
 	
-	private Pixmap createProceduralPixmap (int width, int height) {
+	/**
+	 * Initialize the current level
+	 */
+	private void initLevel() {
+	    score = 0;
+	    level = new Level(Constants.LEVEL_01);
+	}
+	
+ 	private Pixmap createProceduralPixmap (int width, int height) {
 		Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
 		// Fill square with red color at 50% opacity
 		pixmap.setColor(1, 0, 0, 0.5f);
@@ -69,12 +79,19 @@ public class WorldController extends InputAdapter {
 		return pixmap;
 	}
 	
+ 	/**
+ 	 * Update the world
+ 	 * @param deltaTime
+ 	 */
 	public void update (float deltaTime) {
 		handleDebugInput(deltaTime);
-		updateTestObjects(deltaTime);
 		cameraHelper.update(deltaTime);
 	}
 	
+	/**
+	 * Handle debug input
+	 * @param deltaTime time passed since the previous frame
+	 */
 	private void handleDebugInput (float deltaTime) {
 		if (Gdx.app.getType() != ApplicationType.Desktop) return;
 		
@@ -107,6 +124,11 @@ public class WorldController extends InputAdapter {
 			cameraHelper.setZoom(1);
 	}
 	
+	/**
+	 * Move the camera to the coordinates specified by (x, y)
+	 * @param x
+	 * @param y
+	 */
 	private void moveCamera (float x, float y) {
 		x += cameraHelper.getPosition().x;
 		y += cameraHelper.getPosition().y;
