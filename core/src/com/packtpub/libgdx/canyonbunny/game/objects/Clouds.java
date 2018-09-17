@@ -83,7 +83,7 @@ public class Clouds extends AbstractGameObject {
         Cloud cloud = new Cloud();
         cloud.dimension.set(dimension);
         // Select random cloud image
-        cloud.setRegion(reg.Clouds.random());
+        cloud.setRegion(regClouds.random());
         //position
         Vector2 pos = new Vector2();
         pos.x = length + 10; // position after end of level
