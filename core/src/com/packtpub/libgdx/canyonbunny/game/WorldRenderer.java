@@ -1,5 +1,6 @@
 package com.packtpub.libgdx.canyonbunny.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -33,6 +34,7 @@ public class WorldRenderer implements Disposable {
 
   public void render () {
 	  renderWorld(batch);
+	  renderGui(batch);
   }
   
   private void renderWorld (SpriteBatch batch) {
@@ -80,4 +82,37 @@ public class WorldRenderer implements Disposable {
         batch.setColor(1, 1, 1, 1);
       } 
   }
+  
+  private void renderGuiFpsCounter (SpriteBatch batch) {
+	  float x = cameraGUI.viewportWidth - 55;
+      float y = cameraGUI.viewportHeight - 15;
+      int fps = Gdx.graphics.getFramesPerSecond();
+      BitmapFont fpsFont = Assets.instance.fonts.defaultNormal;
+      if (fps >= 45) {
+        // 45 or more FPS show up in green
+        fpsFont.setColor(0, 1, 0, 1);
+      } else if (fps >= 30) {
+        // 30 or more FPS show up in yellow
+        fpsFont.setColor(1, 1, 0, 1);
+      } else {
+        // less than 30 FPS show up in red
+        fpsFont.setColor(1, 0, 0, 1);
+      }
+      fpsFont.draw(batch, "FPS: " + fps, x, y);
+      fpsFont.setColor(1, 1, 1, 1); // white
+    }
+  
+  private void renderGui (SpriteBatch batch) {
+      batch.setProjectionMatrix(cameraGUI.combined);
+      batch.begin();
+      // draw collected gold coins icon + text
+      // (anchored to top left edge)
+      renderGuiScore(batch);
+      // draw extra lives icon + text (anchored to top right edge)
+      renderGuiExtraLive(batch);
+      // draw FPS text (anchored to bottom right edge)
+      renderGuiFpsCounter(batch);
+      batch.end();
+  }
+  
 }
