@@ -133,7 +133,7 @@ public class Level {
         Gdx.app.debug(TAG, "level '" + filename + "' loaded");
     }
     
-    private void render (SpriteBatch batch) {
+    public void render (SpriteBatch batch) {
         // Draw Mountains
         mountains.render(batch);
         
