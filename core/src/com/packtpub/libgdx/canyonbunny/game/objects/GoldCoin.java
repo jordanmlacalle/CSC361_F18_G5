@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.packtpub.libgdx.canyonbunny.game.Assets; 
 
-public class GoldCoin {
+public class GoldCoin extends AbstractGameObject{
     
     /**
      * regGoldCoin - texture region with gold coin image
@@ -47,8 +47,8 @@ public class GoldCoin {
     }
     
     /**
-     * Get the current score
-     * @return current score
+     * Get the score value for GoldCoin
+     * @return score value
      */
     public int getScore () {
         return 100;
