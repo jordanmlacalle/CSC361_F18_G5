@@ -7,6 +7,7 @@ import com.packtpub.libgdx.canyonbunny.game.objects.Feather;
 import com.packtpub.libgdx.canyonbunny.game.objects.GoldCoin;
 import com.packtpub.libgdx.canyonbunny.game.objects.Rock;
 import com.packtpub.libgdx.canyonbunny.util.Constants;
+
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -154,10 +155,56 @@ public class WorldController extends InputAdapter {
 		cameraHelper.setPosition(x, y);
 	}
 	
-	private void onCollisionBunnyHeadWithRock (Rock rock) {}
-    private void onCollisionBunnyWithGoldCoin (GoldCoin goldCoin) {}
+	/**
+	 * Defines how the collision between the BunnyHead with a Rock should be handled.
+	 * @param rock The Rock that the BunnyHead has collided with
+	 */
+	private void onCollisionBunnyHeadWithRock (Rock rock) {
+	    // Set bunnyHead to the current level's BunnyHead 
+	    BunnyHead bunnyHead = level.bunnyHead;
+	    float heightDifference = Math.abs(bunnyHead.position.y - ( rock.position.y + rock.bounds.height));
+	    if (heightDifference > 0.25f) {
+	        boolean hitRightEdge = bunnyHead.position.x > ( rock.position.x + rock.bounds.width / 2.0f);
+	        if (hitRightEdge) {
+	            bunnyHead.position.x = rock.position.x + rock.bounds.width;
+	        }
+	        else {
+	            bunnyHead.position.x = rock.position.x - bunnyHead.bounds.width;
+	        }
+	        return;
+	    }
+	    
+	    switch (bunnyHead.jumpState) {
+	    case GROUNDED:
+	        break;
+	    case FALLING:
+	    case JUMP_FALLING:
+	        bunnyHead.position.y = rock.position.y + bunnyHead.bounds.height + bunnyHead.origin.y;
+	        bunnyHead.jumpState = JUMP_STATE.GROUNDED;
+	        break;
+	    case JUMP_RISING:
+	        bunnyHead.position.y = rock.position.y + bunnyHead.bounds.height + bunnyHead.origin.y;
+	        break;
+	    }
+	}
+	
+	/**
+	 * Defines how the collision between the BunnyHead and a GoldCoin is handled.
+	 * If the BunnyHead collides with a GoldCoin, the collected state of the GoldCoin
+	 * is set to true and the score value of the GoldCoin is added to the player's score.
+	 * 
+	 * @param goldCoin The GoldCoin that the BunnyHead has collided with
+	 */
+    private void onCollisionBunnyWithGoldCoin (GoldCoin goldCoin) {
+        goldCoin.collected = true;
+        score += goldCoin.getScore();
+        Gdx.app.log(TAG, "Gold coin collected");
+    }
     private void onCollisionBunnyWithFeather (Feather feather) {}
     
+    /**
+     * Check for collisions between BunnyHead and other level objects
+     */
 	private void testCollisions () {
 	    r1.set(level.bunnyHead.position.x, level.bunnyHead.position.y, level.bunnyHead.bounds.width, level.bunnyHead.bounds.height);
 	    
@@ -165,25 +212,25 @@ public class WorldController extends InputAdapter {
 	    for (Rock rock : level.rocks) {
 	        r2.set(rock.position.x, rock.position.y, rock.bounds.width, rock.bounds.height);
 	        
-	        if (!r1.overlaps(r2)) continue;
+	        if (!r1.overlaps(r2)) continue; // if BunnyHead is not colliding with current Rock, continue to next iteration
 	        onCollisionBunnyHeadWithRock(rock);
 	        // IMPORTANT: must do all collisions for valid edge testing on rocks
 	    }
 	    
 	    // Test collision: Bunny Head <-> Gold Coins
 	    for (GoldCoin goldCoin : level.goldCoins) {
-	        if (goldCoin.collected) continue;
+	        if (goldCoin.collected) continue; // ignore GoldCoin that has already been collected
 	        r2.set((goldCoin.position.x, goldCoin.position.y, goldCoin.bounds.width, goldCoin.bounds.height);
-	        if (!r1.overlaps(r2)) continue;
+	        if (!r1.overlaps(r2)) continue; // if BunnyHead is not colliding with current GoldCoin, continue to next iteration
 	        onCollisionBunnyWithGoldCoin(goldCoin);
 	        break;
 	    }
 	    
 	    // Test collision: Bunny Head <-> Feathers
 	    for (Feather feather : level.feathers) {
-	        if (feather.collected) continue;
+	        if (feather.collected) continue; // ignore Feather that has already been collected
 	        r2.set(feather.position.x, feather.position.y, feather.bounds.width, feather.bounds.height);
-	        if (!r1.overlaps(r2)) continue;
+	        if (!r1.overlaps(r2)) continue; // if BunnyHead is not colliding with current Feather, continue to next iteration
 	        onCollisionBunnyWithFeather(feather);
 	        break;
 	    }
