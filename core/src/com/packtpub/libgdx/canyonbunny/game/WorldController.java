@@ -1,6 +1,10 @@
 package com.packtpub.libgdx.canyonbunny.game;
 
 import com.packtpub.libgdx.canyonbunny.util.CameraHelper;
+import com.packtpub.libgdx.canyonbunny.game.objects.BunnyHead;
+import com.packtpub.libgdx.canyonbunny.game.objects.BunnyHead.JUMP_STATE;
+import com.packtpub.libgdx.canyonbunny.game.objects.Feather;
+import com.packtpub.libgdx.canyonbunny.game.objects.GoldCoin;
 import com.packtpub.libgdx.canyonbunny.game.objects.Rock;
 import com.packtpub.libgdx.canyonbunny.util.Constants;
 import com.badlogic.gdx.Application.ApplicationType;
@@ -10,6 +14,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
@@ -31,6 +36,12 @@ public class WorldController extends InputAdapter {
 	public int score;
 	
 	public CameraHelper cameraHelper;
+	
+	/**
+	 * Rectangles for collision detection
+	 */
+	private Rectangle r1 = new Rectangle();
+	private Rectangle r2 = new Rectangle();
 	
 	public WorldController () {
 		init();
@@ -64,6 +75,12 @@ public class WorldController extends InputAdapter {
 	    level = new Level(Constants.LEVEL_01);
 	}
 	
+	/**
+	 * Creates a rectangle with an X in the center. Used for debugging. 
+	 * @param width the width of the rectangle
+	 * @param height the height of the rectangle
+	 * @return Returns a the created pixmap
+	 */
  	private Pixmap createProceduralPixmap (int width, int height) {
 		Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
 		// Fill square with red color at 50% opacity
@@ -85,11 +102,13 @@ public class WorldController extends InputAdapter {
  	 */
 	public void update (float deltaTime) {
 		handleDebugInput(deltaTime);
+		level.update(deltaTime);
 		cameraHelper.update(deltaTime);
 	}
 	
 	/**
-	 * Handle debug input
+	 * Handle debug input, allows testing during development. Enables control of
+	 * primary (non-gui) camera.
 	 * @param deltaTime time passed since the previous frame
 	 */
 	private void handleDebugInput (float deltaTime) {
@@ -133,5 +152,40 @@ public class WorldController extends InputAdapter {
 		x += cameraHelper.getPosition().x;
 		y += cameraHelper.getPosition().y;
 		cameraHelper.setPosition(x, y);
+	}
+	
+	private void onCollisionBunnyHeadWithRock (Rock rock) {}
+    private void onCollisionBunnyWithGoldCoin (GoldCoin goldCoin) {}
+    private void onCollisionBunnyWithFeather (Feather feather) {}
+    
+	private void testCollisions () {
+	    r1.set(level.bunnyHead.position.x, level.bunnyHead.position.y, level.bunnyHead.bounds.width, level.bunnyHead.bounds.height);
+	    
+	    // Test collision: Bunny Head <-> Rocks
+	    for (Rock rock : level.rocks) {
+	        r2.set(rock.position.x, rock.position.y, rock.bounds.width, rock.bounds.height);
+	        
+	        if (!r1.overlaps(r2)) continue;
+	        onCollisionBunnyHeadWithRock(rock);
+	        // IMPORTANT: must do all collisions for valid edge testing on rocks
+	    }
+	    
+	    // Test collision: Bunny Head <-> Gold Coins
+	    for (GoldCoin goldCoin : level.goldCoins) {
+	        if (goldCoin.collected) continue;
+	        r2.set((goldCoin.position.x, goldCoin.position.y, goldCoin.bounds.width, goldCoin.bounds.height);
+	        if (!r1.overlaps(r2)) continue;
+	        onCollisionBunnyWithGoldCoin(goldCoin);
+	        break;
+	    }
+	    
+	    // Test collision: Bunny Head <-> Feathers
+	    for (Feather feather : level.feathers) {
+	        if (feather.collected) continue;
+	        r2.set(feather.position.x, feather.position.y, feather.bounds.width, feather.bounds.height);
+	        if (!r1.overlaps(r2)) continue;
+	        onCollisionBunnyWithFeather(feather);
+	        break;
+	    }
 	}
 }
