@@ -55,6 +55,11 @@ public class WorldController extends InputAdapter {
 			init();
 			Gdx.app.debug(TAG,  "Game world resetted");
 		}
+		// Toggle camera follow
+		else if (keycode == Keys.ENTER) {
+		    cameraHelper.setTarget(cameraHelper.hasTarget() ? null : level.bunnyHead);
+		    Gdx.app.debug(TAG, "Camera follow enabled: " + cameraHelper.hasTarget());;
+		}
 		return false;
 	}
 	
@@ -74,6 +79,7 @@ public class WorldController extends InputAdapter {
 	private void initLevel() {
 	    score = 0;
 	    level = new Level(Constants.LEVEL_01);
+	    cameraHelper.setTarget(level.bunnyHead);
 	}
 	
 	/**
@@ -104,7 +110,37 @@ public class WorldController extends InputAdapter {
 	public void update (float deltaTime) {
 		handleDebugInput(deltaTime);
 		level.update(deltaTime);
+		testCollisions();
 		cameraHelper.update(deltaTime);
+	}
+	
+	/**
+	 * Handles user input for the player character (Bunny Head).
+	 * User input is only handled if the camera target is the Bunny Head.
+	 * 
+	 * @param deltaTime The time that has passed since the last frame 
+	 */
+	private void handleInputGame (float deltaTime) {
+	    if (cameraHelper.hasTarget(level.bunnyHead)) {
+	        // Player movement
+	        if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+	            level.bunnyHead.velocity.x = level.bunnyHead.terminalVelocity.x;
+	        } else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+	            level.bunnyHead.velocity.x = level.bunnyHead.terminalVelocity.x;
+	        } else {
+	            // Execute auto-forward movement on non-desktop platform
+	            if (Gdx.app.getType() != ApplicationType.Desktop) {
+	                level.bunnyHead.velocity.x = level.bunnyHead.terminalVelocity.x;
+	            }
+	        }
+	        
+	        // Bunny Jump
+	        if (Gdx.input.isTouched() || Gdx.input.isKeyPressed(Keys.SPACE)) {
+	            level.bunnyHead.setJumping(true);
+	        } else {
+	            level.bunnyHead.setJumping(false);
+	        }
+	    }
 	}
 	
 	/**
@@ -115,22 +151,23 @@ public class WorldController extends InputAdapter {
 	private void handleDebugInput (float deltaTime) {
 		if (Gdx.app.getType() != ApplicationType.Desktop) return;
 		
-		// Camera Controls (move)
-		float camMoveSpeed = 5 * deltaTime;
-		float camMoveSpeedAccelerationFactor = 5;
-		if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT))
-			camMoveSpeed *= camMoveSpeedAccelerationFactor;
-		if (Gdx.input.isKeyPressed(Keys.LEFT))
-			moveCamera(-camMoveSpeed, 0);
-		if (Gdx.input.isKeyPressed(Keys.RIGHT))
-			moveCamera(camMoveSpeed, 0);
-		if (Gdx.input.isKeyPressed(Keys.UP))
-			moveCamera(0, camMoveSpeed);
-		if (Gdx.input.isKeyPressed(Keys.DOWN))
-			moveCamera(0, -camMoveSpeed);
-		if (Gdx.input.isKeyPressed(Keys.BACKSPACE))
-			cameraHelper.setPosition(0, 0);
-		
+		if (!cameraHelper.hasTarget(level.bunnyHead)) {
+    		// Camera Controls (move)
+    		float camMoveSpeed = 5 * deltaTime;
+    		float camMoveSpeedAccelerationFactor = 5;
+    		if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT))
+    			camMoveSpeed *= camMoveSpeedAccelerationFactor;
+    		if (Gdx.input.isKeyPressed(Keys.LEFT))
+    			moveCamera(-camMoveSpeed, 0);
+    		if (Gdx.input.isKeyPressed(Keys.RIGHT))
+    			moveCamera(camMoveSpeed, 0);
+    		if (Gdx.input.isKeyPressed(Keys.UP))
+    			moveCamera(0, camMoveSpeed);
+    		if (Gdx.input.isKeyPressed(Keys.DOWN))
+    			moveCamera(0, -camMoveSpeed);
+    		if (Gdx.input.isKeyPressed(Keys.BACKSPACE))
+    			cameraHelper.setPosition(0, 0);
+		}
 		// Camera Controls (zoom)
 		float camZoomSpeed = 1 * deltaTime;
 		float camZoomSpeedAccelerationFactor = 5;
@@ -190,8 +227,8 @@ public class WorldController extends InputAdapter {
 	
 	/**
 	 * Defines how the collision between the BunnyHead and a GoldCoin is handled.
-	 * If the BunnyHead collides with a GoldCoin, the collected state of the GoldCoin
-	 * is set to true and the score value of the GoldCoin is added to the player's score.
+	 * The collected state of the GoldCoin is set to true and the score value 
+	 * of the GoldCoin is added to the player's score.
 	 * 
 	 * @param goldCoin The GoldCoin that the BunnyHead has collided with
 	 */
@@ -200,7 +237,21 @@ public class WorldController extends InputAdapter {
         score += goldCoin.getScore();
         Gdx.app.log(TAG, "Gold coin collected");
     }
-    private void onCollisionBunnyWithFeather (Feather feather) {}
+    
+    /**
+     * Defines how the collision between the BunnyHead and a Feather is handled. 
+     * The collected state of the Feather is set to true and the score value
+     * of the Feather is added to the player's score. The feather powerup is 
+     * applied to the BunnyHead.
+     * 
+     * @param feather The Feather that the BunnyHead has collided with
+     */
+    private void onCollisionBunnyWithFeather (Feather feather) {
+        feather.collected = true;
+        score += feather.getScore();
+        level.bunnyHead.setFeatherPowerup(true);
+        Gdx.app.log(TAG, "Feather collected");
+    }
     
     /**
      * Check for collisions between BunnyHead and other level objects
@@ -218,9 +269,9 @@ public class WorldController extends InputAdapter {
 	    }
 	    
 	    // Test collision: Bunny Head <-> Gold Coins
-	    for (GoldCoin goldCoin : level.goldCoins) {
+	    for (GoldCoin goldCoin : level.goldcoins) {
 	        if (goldCoin.collected) continue; // ignore GoldCoin that has already been collected
-	        r2.set((goldCoin.position.x, goldCoin.position.y, goldCoin.bounds.width, goldCoin.bounds.height);
+	        r2.set(goldCoin.position.x, goldCoin.position.y, goldCoin.bounds.width, goldCoin.bounds.height);
 	        if (!r1.overlaps(r2)) continue; // if BunnyHead is not colliding with current GoldCoin, continue to next iteration
 	        onCollisionBunnyWithGoldCoin(goldCoin);
 	        break;
