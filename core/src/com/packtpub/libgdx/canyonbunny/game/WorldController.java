@@ -39,6 +39,10 @@ public class WorldController extends InputAdapter {
 	public CameraHelper cameraHelper;
 	
 	/**
+	 * timeleftGameOverDelay - the time remaining for the Game Over message 
+	 */
+	private float timeLeftGameOverDelay;
+	/**
 	 * Rectangles for collision detection
 	 */
 	private Rectangle r1 = new Rectangle();
@@ -70,6 +74,7 @@ public class WorldController extends InputAdapter {
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
 		lives = Constants.LIVES_START;
+		timeLeftGameOverDelay = 0;
 		initLevel();
 	}
 	
@@ -109,11 +114,50 @@ public class WorldController extends InputAdapter {
  	 */
 	public void update (float deltaTime) {
 		handleDebugInput(deltaTime);
+		// Check for game over
+		if (isGameOver()) {
+		    // Decrement Game Over message time by deltaTime
+		    timeLeftGameOverDelay -= deltaTime;
+		    // If the message is done displaying, reset 
+		    if (timeLeftGameOverDelay < 0) init();
+		// else, if the game is not over
+		} else {
+		    //handle player input
+		    handleInputGame(deltaTime);
+		}
+		//update the level
 		level.update(deltaTime);
 		testCollisions();
 		cameraHelper.update(deltaTime);
+		//if the game is not over and the player is in the water..
+		if (!isGameOver() && isPlayerInWater()) {
+		    //decrement player lives remaining
+		    lives--;
+		    //after decrementing lives, check if game is over (out of lives)
+		    if (isGameOver())
+		        //set game over message delay time
+		        timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_OVER;
+		    else
+		        //reset the level
+		        initLevel();
+		}
 	}
 	
+	/**
+	 * Check if the player has run out of lives
+	 * @return true if lives < 0, false otherwise
+	 */
+	public boolean isGameOver () {
+	    return lives < 0;
+	}
+	
+	/**
+	 * Check if the player character is in the water (results in life lost)
+	 * @return true if the player is in the water, false otherwise
+	 */
+	public boolean isPlayerInWater () {
+	    return level.bunnyHead.position.y < -5;
+	}
 	/**
 	 * Handles user input for the player character (Bunny Head).
 	 * User input is only handled if the camera target is the Bunny Head.
