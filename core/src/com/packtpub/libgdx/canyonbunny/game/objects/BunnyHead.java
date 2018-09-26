@@ -133,7 +133,7 @@ public class BunnyHead extends AbstractGameObject {
 	 * @param deltaTime time since the last y direction update
 	 */
 	@Override
-	   protected void updateMotionY (float deltaTime) {
+	public void updateMotionY (float deltaTime) {
 	     switch (jumpState) {
 	       case GROUNDED:
 	         jumpState = JUMP_STATE.FALLING;
