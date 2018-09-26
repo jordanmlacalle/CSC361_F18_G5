@@ -6,9 +6,10 @@ import com.packtpub.libgdx.canyonbunny.game.Assets;
 
 public class Feather extends AbstractGameObject
 {
-
+    //the texture region for the Feather 
     private TextureRegion regFeather;
 
+    //whether or not the Feather has been collected
     public boolean collected;
 
     public Feather()

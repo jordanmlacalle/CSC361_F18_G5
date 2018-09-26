@@ -26,8 +26,9 @@ public class WorldController extends InputAdapter
     private static final String TAG = WorldController.class.getName();
 
     /**
-     * level - the current level lives - the number of lives remaining score - the
-     * current score
+     * level - the current level 
+     * lives - the number of lives remaining 
+     * score - the current score
      */
     public Level level;
     public int lives;
@@ -50,6 +51,10 @@ public class WorldController extends InputAdapter
         init();
     }
 
+    /**
+     * Handles some special inputs for resetting game world and switching camera target
+     * @param keycode the keycode for the pressed key
+     */
     @Override
     public boolean keyUp(int keycode)
     {
