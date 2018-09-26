@@ -69,9 +69,9 @@ public class Level
     }
 
     /**
-     * rocks - array of all Rock objects in a level bunnyHead - the single BunnyHead
-     * object in a level (the player character) goldCoins - array of all GoldCoin
-     * objects in a level feathers - array of a Feather objects in a level
+     * rocks - array of all Rock objects in a level 
+     * bunnyHead - the single BunnyHead object in a level (the player character) 
+     * goldCoins - array of all GoldCoin objects in a level feathers - array of a Feather objects in a level
      */
     public Array<Rock> rocks;
     public BunnyHead bunnyHead;

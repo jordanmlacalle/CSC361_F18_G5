@@ -8,13 +8,12 @@ public class Rock extends AbstractGameObject
 {
 
     /**
-     * regEdge - the texture region to be used for the edges (right and left) of a
-     * Rock regMiddle - the texture region to be used for all sections of a Rock
-     * that are not an edge
+     * regEdge - the texture region to be used for the edges (right and left) of a Rock 
+     * regMiddle - the texture region to be used for all sections of a Rock that are not an edge
+     * length - length of the rock
      */
     private TextureRegion regEdge;
     private TextureRegion regMiddle;
-
     private int length;
 
     public Rock()
@@ -22,6 +21,9 @@ public class Rock extends AbstractGameObject
         init();
     }
 
+    /**
+     * Initializes the dimensions, texture regions, and length of the Rock
+     */
     private void init()
     {
         dimension.set(1, 1.5f);

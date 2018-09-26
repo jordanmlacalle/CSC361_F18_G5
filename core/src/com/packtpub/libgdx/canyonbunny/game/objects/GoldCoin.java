@@ -8,11 +8,10 @@ public class GoldCoin extends AbstractGameObject
 {
 
     /**
-     * regGoldCoin - texture region with gold coin image collected - flag marking
-     * this coin as collected or not collected
+     * regGoldCoin - texture region with gold coin image 
+     * collected - flag marking this coin as collected or not collected
      */
     private TextureRegion regGoldCoin;
-
     public boolean collected;
 
     public GoldCoin()
