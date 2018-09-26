@@ -108,7 +108,10 @@ public class BunnyHead extends AbstractGameObject {
 	     return hasFeatherPowerup && timeLeftFeatherPowerup > 0;
 	}
 
-	
+	/**
+	 * Updates the bunny since the last update
+	 * @param deltaTime the time since the last update
+	 */
 	@Override
 	public void update (float deltaTime) {
 		super.update(deltaTime);
@@ -124,5 +127,58 @@ public class BunnyHead extends AbstractGameObject {
 	    	 }
 	    } 
 	} 
+	
+	/**
+	 * Provides correct motion in the y direction when the bunny jumps.
+	 * @param deltaTime time since the last y direction update
+	 */
+	@Override
+	   protected void updateMotionY (float deltaTime) {
+	     switch (jumpState) {
+	       case GROUNDED:
+	         jumpState = JUMP_STATE.FALLING;
+	         break;
+	       case JUMP_RISING:
+	         // Keep track of jump time
+	         timeJumping += deltaTime;
+	         // Jump time left?
+	         if (timeJumping <= JUMP_TIME_MAX) {
+	           // Still jumping
+	           velocity.y = terminalVelocity.y;
+	         }
+	         break;
+	       case FALLING:
+	         break;
+	       case JUMP_FALLING:
+	         // Add delta times to track jump time
+	         timeJumping += deltaTime;
+	         // Jump to minimal height if jump key was pressed too short
+	         if (timeJumping > 0 && timeJumping <= JUMP_TIME_MIN) {
+	           // Still jumping
+	           velocity.y = terminalVelocity.y;
+	         }
+	     }
+	     if (jumpState != JUMP_STATE.GROUNDED)
+	     super.updateMotionY(deltaTime);
+	}
+
+	/**
+	 * Draws the bunny in the scene at the current moment.
+	 */
+	@Override
+	public void render (SpriteBatch batch) {
+	     TextureRegion reg = null;
+	     // Set special color when game object has a feather power-up
+	     if (hasFeatherPowerup) {
+	    	 batch.setColor(1.0f, 0.8f, 0.0f, 1.0f);
+	     }	
+	     // Draw image
+	     reg = regHead;
+	     batch.draw(reg.getTexture(), position.x, position.y, origin.x, origin.y, dimension.x, dimension.y, scale.x, scale.y, rotation, reg.getRegionX(), reg.getRegionY(), reg.getRegionWidth(), reg.getRegionHeight(), viewDirection == VIEW_DIRECTION.LEFT, false);
+	     // Reset color to white
+	     batch.setColor(1, 1, 1, 1);
+	}
+	
+	
 	       
 }
