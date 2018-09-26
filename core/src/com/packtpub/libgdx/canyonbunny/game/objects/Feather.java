@@ -38,7 +38,7 @@ public class Feather extends AbstractGameObject {
         
         TextureRegion reg = null;
         reg = regFeather;
-        batch.draw(reg.getTexture(), position.x, position.y, origin.x, origin.y, dimension.x, dimension.y, scale.x, scale.y, rotation, reg.getRegionWidth(), reg.getRegionHeight(), 0, 0, false, false);
+        batch.draw(reg.getTexture(), position.x, position.y, origin.x, origin.y, dimension.x, dimension.y, scale.x, scale.y, rotation, reg.getRegionX(), reg.getRegionY(), reg.getRegionWidth(), reg.getRegionHeight(), false, false);
     }
     
     /**
