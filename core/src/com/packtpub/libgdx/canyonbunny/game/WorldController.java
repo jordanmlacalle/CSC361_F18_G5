@@ -168,7 +168,7 @@ public class WorldController extends InputAdapter {
 	    if (cameraHelper.hasTarget(level.bunnyHead)) {
 	        // Player movement
 	        if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-	            level.bunnyHead.velocity.x = level.bunnyHead.terminalVelocity.x;
+	            level.bunnyHead.velocity.x = -level.bunnyHead.terminalVelocity.x;
 	        } else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
 	            level.bunnyHead.velocity.x = level.bunnyHead.terminalVelocity.x;
 	        } else {
