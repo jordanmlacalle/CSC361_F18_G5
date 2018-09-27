@@ -23,8 +23,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.packtpub.libgdx.canyonbunny.game.Assets;
 import com.packtpub.libgdx.canyonbunny.util.Constants;
 
-//DONE: p230, 242, 243
-//TODO 244, 245, 246, 247, 248, 
+//DONE: 244, 245, 246 
+//TODO 247, 248, 
 //     253, 254, 255, 256, 257, 258, 259
 public class MenuScreen extends AbstractGameScreen
 {
@@ -77,34 +77,60 @@ public class MenuScreen extends AbstractGameScreen
     {
         // OpenGL clear color -> black
         Gdx.gl.glClearColor(0.0f,  0.0f,  0.0f, 1.0f);
-        Gdx.gl.glClear(Gl20.GL_COLOR_BUFFER_BIT);
-        if(Gdx.input.isTouched())
-            game.setScreen(new GameScreen(game));
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        
+        if (debugEnabled)
+        {
+            debugRebuildStage -= deltaTime;
+            
+            if (debugRebuildStage <= 0)
+            {
+                debugRebuildStage = DEBUG_REBUILD_INTERVAL;
+                rebuildStage();
+            }
+        }
+        
+        stage.act(deltaTime);
+        stage.draw();
+        Table.drawDebug(stage);
     }
     
     /**
+     * Resize the menu screen
      * 
-     * @param width
-     * @param height
+     * @param width The desired width after resizing
+     * @param height The desired height after resizing
      */
     @Override
     public void resize (int width, int height)
     {
-        
+        stage.getViewport().update(width, height, true);
     }
     
+    /**
+     * Display the menu screen
+     */
     @Override
     public void show ()
     {
-        
+        stage = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT));
+        Gdx.input.setInputProcessor(stage);
+        rebuildStage();
     }
     
+    /**
+     * Hide the menu screen by disposing memory
+     */
     @Override
     public void hide ()
     {
-        
+        stage.dispose();
+        skinCanyonBunny.dispose();
     }
     
+    /**
+     * 
+     */
     @Override
     public void pause ()
     {
@@ -133,5 +159,60 @@ public class MenuScreen extends AbstractGameScreen
         stack.add(layerBackground);
         stack.add(layerObjects);
         stack.add(layerLogos);
+        stack.add(layerControls);
+        stack.addActor(layerOptionsWindow);
+    }
+    
+    /**
+     * Builds the background layer using the background image
+     * from the skinCanyonBunny Skin.
+     * 
+     * @return The built background layer
+     */
+    private Table buildBackgroundLayer ()
+    {
+        Table layer = new Table();
+        // Add background
+        imgBackground = new Image(skinCanyonBunny, "background");
+        layer.add(imgBackground);
+        return layer;
+    }
+    
+    /**
+     * Builds the objects layer using the coins and bunny
+     * images from the skinCanyonBunny Skin.
+     * 
+     * @return The built objects layer
+     */
+    private Table buildObjectsLayer ()
+    {
+        Table layer = new Table();
+        // Add coins image
+        imgCoins = new Image(skinCanyonBunny, "coins");
+        layer.addActor(imgCoins);
+        imgCoins.setPosition(135, 80);
+        // Add bunny image
+        imgBunny = new Image(skinCanyonBunny, "bunny");
+        layer.addActor(imgBunny);
+        imgBunny.setPosition(355, 40);
+        return layer;
+    }
+    
+    private Table buildLogosLayer ()
+    {
+        Table layer= new Table();
+        return layer;
+    }
+    
+    private Table buildControlsLayer ()
+    {
+        Table layer = new Table();
+        return layer;
+    }
+    
+    private Table buildOptionsWindowLayer ()
+    {
+        Table layer = new Table();
+        return layer;
     }
 }
