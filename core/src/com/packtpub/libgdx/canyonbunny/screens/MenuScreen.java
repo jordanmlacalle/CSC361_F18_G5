@@ -25,8 +25,6 @@ import com.packtpub.libgdx.canyonbunny.util.Constants;
 import com.packtpub.libgdx.canyonbunny.util.CharacterSkin;
 import com.packtpub.libgdx.util.GamePreferences;
 
-//DONE: 
-//TODO 256, 257, 258, 259
 public class MenuScreen extends AbstractGameScreen
 {
     private Skin skinLibgdx;
