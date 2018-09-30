@@ -22,11 +22,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.packtpub.libgdx.canyonbunny.game.Assets;
 import com.packtpub.libgdx.canyonbunny.util.Constants;
+import com.packtpub.libgdx.canyonbunny.util.CharacterSkin;
+import com.packtpub.libgdx.util.GamePreferences;
 
-//DONE: 247, 248
-//TODO 253, 254, 255, 256, 257, 258, 259
+//DONE: 253, 254, 255
+//TODO 256, 257, 258, 259
 public class MenuScreen extends AbstractGameScreen
 {
+    private Skin skinLibgdx;
+    
     private static final String TAG = MenuScreen.class.getName();
     
     /**
@@ -137,12 +141,13 @@ public class MenuScreen extends AbstractGameScreen
     }
     
     /**
-     * Rebuilds the stage for the menu screen
+     * Rebuilds the stage for the menu screen, reloading skin assets
      */
     private void rebuildStage ()
     {
         skinCanyonBunny = new Skin(Gdx.files.internal(Constants.SKIN_CANYONBUNNY_UI), new TextureAtlas(Constants.TEXTURE_ATLAS_UI));
-        
+        skinLibgdx = new Skin(Gdx.files.internal(Constants.SKIN_LIBGDX_UI), new TextureAtlas(Constants.TEXTURE_ATLAS_LIBGDX_UI));
+
         // Build all layers
         Table layerBackground = buildBackgroundLayer();
         Table layerObjects = buildObjectsLayer();
@@ -256,7 +261,39 @@ public class MenuScreen extends AbstractGameScreen
     private Table buildOptionsWindowLayer ()
     {
         Table layer = new Table();
+        
         return layer;
+    }
+    
+    /**
+     * Builds audio options 
+     * 
+     * @return Built audio options table
+     */
+    private Table buildOptWinAudio()
+    {
+        Table tbl = new Table();
+        // Add Title: "Audio"
+        tbl.pad(10, 10, 0, 10);
+        tbl.add(new Label("Audio", skinLibgdx, "default-font", Color.ORANGE)).colspan(3);
+        tbl.row();
+        tbl.columnDefaults(0).padRight(10);
+        tbl.columnDefaults(1).padRight(10);
+        // Add Checkbox, "Sound" label, sound volume slider
+        chkSound = new Checkbox("", skinLibgdx);
+        tbl.add(chkSound);
+        tbl.add(new Label("Sound", skinLibgdx));
+        sldSound = new Slider(0.0f, 1.0f, 0.1f, false, skinLibgdx);
+        tbl.add(sldSound);
+        tbl.row();
+        //Add Checkbox, "Music" label, music volume slider
+        chkMusic = new CheckBox("", skinLibgdx);
+        tbl.add(chkMusic);
+        tbl.add(new Label("Music", skinLibgdx));
+        sldMusic = new Slider(0.0f, 1.0f, 0.1f, false, skinLibgdx);
+        tbl.add(sldMusic);
+        tbl.row();
+        return tbl;
     }
     
     /**
@@ -272,4 +309,79 @@ public class MenuScreen extends AbstractGameScreen
     {
         
     }
+    
+    /**
+     * Loads saved settings.
+     */
+    private void loadSettings()
+    {
+        GamePreferences prefs = GamePreferences.instance;
+        prefs.load();
+        chkSound.setChecked(prefs.sound);
+        sldSound.setvalue(prefs.volSound);
+        chkMusic.setChecked(prefs.music);
+        sldMusic.setValue(prefs.volMusic);
+        selCharSkin.setSelectedIndex(prefs.charSkin);
+        onCharSkinSelected(prefs.charSkin);
+        chkShowFpsCounter.setChecked(prefs.showFpsCounter);
+        
+    }
+    
+    /**
+     * Saves settings.
+     */
+    private void saveSettings()
+    {
+        GamePreferences prefs = GamePreferences.instance;
+        prefs.sound = chkSound.isChecked();
+        prefs.volSound = sldSound.getValue();
+        prefs.music = chkMusic.isChecked();
+        prefs.volMusic = sldMusic.getValue();
+        prefs.charSkin = selCharSkin.getSelectedIndex();
+        prefs.showFpsCounter = chkShowFpsCounter.isChecked();
+        prefs.save();
+    }
+    
+    /**
+     * Updates preview image
+     * 
+     * @param index
+     */
+    private void onCharSkinSelected (int index)
+    {
+        CharacterSkin skin = CharacterSkin.values() [index];
+        imgCharSkin.setColor(skin.getColor());
+    }
+    
+    /**
+     * Saves the current settings of the Options window and swaps the Options
+     * window for the menu controls
+     */
+    private void onSaveClicked()
+    {
+        saveSettings();
+        onCancelClicked();
+    }
+    
+    /**
+     * Swaps the Options and Menu widgets, discarded any changes made to settings.
+     */
+    private void onCancelClicked()
+    {
+        btnMenuPlay.setVisible(true);
+        btnMenuOptions.setVisible(true);
+        winOptions.setVisible(false);
+    }
+    
+    /**
+     * Hides menu by disposing objects.
+     */
+    @Override
+    public void hide()
+    {
+        stage.dispose();
+        skinCanyonBunny.dispose();
+        skinLibgdx.dispose();
+    }
+    
 }
