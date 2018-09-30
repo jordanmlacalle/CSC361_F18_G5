@@ -23,9 +23,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.packtpub.libgdx.canyonbunny.game.Assets;
 import com.packtpub.libgdx.canyonbunny.util.Constants;
 
-//DONE: 244, 245, 246 
-//TODO 247, 248, 
-//     253, 254, 255, 256, 257, 258, 259
+//DONE: 247, 248
+//TODO 253, 254, 255, 256, 257, 258, 259
 public class MenuScreen extends AbstractGameScreen
 {
     private static final String TAG = MenuScreen.class.getName();
@@ -198,15 +197,59 @@ public class MenuScreen extends AbstractGameScreen
         return layer;
     }
     
+    /**
+     * Builds the logos layer containing logos for CanyonBunny and 
+     * information such as tools used (libgdx) using images from the
+     * skinCanyonBunny skin.
+     * 
+     * @return The built logos layer
+     */
     private Table buildLogosLayer ()
     {
         Table layer= new Table();
+        layer.left().top();
+        // Add Game Logo
+        imgLogo = new Image(skinCanyonBunny, "logo");
+        layer.add(imgLogo);
+        layer.row().expandY();
+        // Add Info Logos
+        imgInfo = new Image(skinCanyonBunny, "info");
+        layer.add(imgInfo).bottom();
+        
+        if(debugEnabled)
+        {
+            layer.debug();
+        }
+        
         return layer;
     }
     
+    /**
+     * Builds the controls layer which adds UI elements which allow the
+     * player to start playing by clicking a button.
+     * 
+     * @return The built controls layer
+     */
     private Table buildControlsLayer ()
     {
         Table layer = new Table();
+        layer.right().bottom();
+        // Add Play Button
+        btnMenuPlay = new Button(skinCanyonBunny, "play");
+        layer.add(btnMenuPlay);
+        btnMenuPlay.addListener(new ChangeListener()
+                                {
+                                    @Override
+                                       public void changed(ChangeEvent event, Actor actor)
+                                       {
+                                            onPlayClicked(;)
+                                       }
+                                });
+        if(debugEnabled)
+        {
+            layer.debug();
+        }
+        
         return layer;
     }
     
@@ -214,5 +257,19 @@ public class MenuScreen extends AbstractGameScreen
     {
         Table layer = new Table();
         return layer;
+    }
+    
+    /**
+     * The action to be performed when the "play" button on the menu is clicked.
+     * Starts the game.
+     */
+    private void onPlayClicked()
+    {
+        game.setScreen(new GameScreen(game));
+    }
+    
+    private void onOptionsClicked()
+    {
+        
     }
 }
