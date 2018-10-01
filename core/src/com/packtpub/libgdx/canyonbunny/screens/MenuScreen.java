@@ -94,7 +94,7 @@ public class MenuScreen extends AbstractGameScreen
         
         stage.act(deltaTime);
         stage.draw();
-        Table.drawDebug(stage);
+        stage.setDebugAll(true);
     }
     
     /**
@@ -121,13 +121,14 @@ public class MenuScreen extends AbstractGameScreen
     }
     
     /**
-     * Hide the menu screen by disposing memory
+     * Hides menu by disposing objects.
      */
     @Override
-    public void hide ()
+    public void hide()
     {
         stage.dispose();
         skinCanyonBunny.dispose();
+        skinLibgdx.dispose();
     }
     
     /**
@@ -498,16 +499,4 @@ public class MenuScreen extends AbstractGameScreen
         btnMenuOptions.setVisible(true);
         winOptions.setVisible(false);
     }
-    
-    /**
-     * Hides menu by disposing objects.
-     */
-    @Override
-    public void hide()
-    {
-        stage.dispose();
-        skinCanyonBunny.dispose();
-        skinLibgdx.dispose();
-    }
-    
 }
