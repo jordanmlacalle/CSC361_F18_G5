@@ -20,10 +20,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.packtpub.libgdx.canyonbunny.game.Assets;
 import com.packtpub.libgdx.canyonbunny.util.Constants;
 import com.packtpub.libgdx.canyonbunny.util.CharacterSkin;
-import com.packtpub.libgdx.util.GamePreferences;
+import com.packtpub.libgdx.canyonbunny.util.GamePreferences;
 
 public class MenuScreen extends AbstractGameScreen
 {
@@ -245,7 +246,7 @@ public class MenuScreen extends AbstractGameScreen
                                     @Override
                                        public void changed(ChangeEvent event, Actor actor)
                                        {
-                                            onPlayClicked(;)
+                                            onPlayClicked();
                                        }
                                 });
         if(debugEnabled)
@@ -301,7 +302,7 @@ public class MenuScreen extends AbstractGameScreen
         tbl.columnDefaults(0).padRight(10);
         tbl.columnDefaults(1).padRight(10);
         // Add Checkbox, "Sound" label, sound volume slider
-        chkSound = new Checkbox("", skinLibgdx);
+        chkSound = new CheckBox("", skinLibgdx);
         tbl.add(chkSound);
         tbl.add(new Label("Sound", skinLibgdx));
         sldSound = new Slider(0.0f, 1.0f, 0.1f, false, skinLibgdx);
@@ -331,14 +332,14 @@ public class MenuScreen extends AbstractGameScreen
         tbl.add(new Label("Character Skin", skinLibgdx, "default-font", Color.ORANGE)).colspan(2);
         tbl.row();
         // Add Drop down box filled with skin items
-        selCharSkin = new SelectBox<CharacterSkin>(skinlibgdx);
+        selCharSkin = new SelectBox<CharacterSkin>(skinLibgdx);
         
         selCharSkin.setItems(CharacterSkin.values());
         
         selCharSkin.addListener(new ChangeListener()
                                 {
                                     @Override
-                                    public void changed(ChangeEvent event, Actor, actor)
+                                    public void changed(ChangeEvent event, Actor actor)
                                     {
                                         onCharSkinSelected(((SelectBox<CharacterSkin>)actor).getSelectedIndex());
                                     }
@@ -365,7 +366,7 @@ public class MenuScreen extends AbstractGameScreen
         tbl.columnDefaults(0).padRight(10);
         tbl.columnDefaults(1).padRight(10);
         // Add checkbox, "Show FPS Counter" label
-        chkShowFpsCounter = new Checkbox("", skinLibgdx);
+        chkShowFpsCounter = new CheckBox("", skinLibgdx);
         tbl.add(new Label("Show FPS Counter", skinLibgdx));
         tbl.add(chkShowFpsCounter);
         tbl.row();
@@ -443,7 +444,7 @@ public class MenuScreen extends AbstractGameScreen
         GamePreferences prefs = GamePreferences.instance;
         prefs.load();
         chkSound.setChecked(prefs.sound);
-        sldSound.setvalue(prefs.volSound);
+        sldSound.setValue(prefs.volSound);
         chkMusic.setChecked(prefs.music);
         sldMusic.setValue(prefs.volMusic);
         selCharSkin.setSelectedIndex(prefs.charSkin);
