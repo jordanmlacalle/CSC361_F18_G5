@@ -1,5 +1,6 @@
 package com.packtpub.libgdx.canyonbunny.screens;
 
+   import com.packtpub.libgdx.canyonbunny.util.GamePreferences;
    import com.badlogic.gdx.Game;
    import com.badlogic.gdx.Gdx;
    import com.badlogic.gdx.graphics.GL20;
@@ -38,6 +39,7 @@ package com.packtpub.libgdx.canyonbunny.screens;
      
      @Override
      public void show () {
+       GamePreferences.instance.load();
        worldController = new WorldController(game);
        worldRenderer = new WorldRenderer(worldController);
        Gdx.input.setCatchBackKey(true);
