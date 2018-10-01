@@ -1,5 +1,7 @@
 package com.packtpub.libgdx.canyonbunny.game;
 
+import com.badlogic.gdx.Game;
+import com.packtpub.libgdx.canyonbunny.screens.MenuScreen;
 import com.packtpub.libgdx.canyonbunny.util.CameraHelper;
 import com.packtpub.libgdx.canyonbunny.game.objects.BunnyHead;
 import com.packtpub.libgdx.canyonbunny.game.objects.BunnyHead.JUMP_STATE;
@@ -33,6 +35,12 @@ public class WorldController extends InputAdapter
     public Level level;
     public int lives;
     public int score;
+    
+    private Game game;
+    private void backToMenu () {
+      // switch to menu screen
+      game.setScreen(new MenuScreen(game));
+    }
 
     public CameraHelper cameraHelper;
 
@@ -46,8 +54,9 @@ public class WorldController extends InputAdapter
     private Rectangle r1 = new Rectangle();
     private Rectangle r2 = new Rectangle();
 
-    public WorldController()
+    public WorldController(Game game)
     {
+    	this.game = game;
         init();
     }
 
@@ -69,7 +78,9 @@ public class WorldController extends InputAdapter
         {
             cameraHelper.setTarget(cameraHelper.hasTarget() ? null : level.bunnyHead);
             Gdx.app.debug(TAG, "Camera follow enabled: " + cameraHelper.hasTarget());
-            ;
+         // Back to Menu
+        } else if (keycode == Keys.ESCAPE || keycode == Keys.BACK) {
+            backToMenu();
         }
         return false;
     }
@@ -132,9 +143,12 @@ public class WorldController extends InputAdapter
         {
             // Decrement Game Over message time by deltaTime
             timeLeftGameOverDelay -= deltaTime;
+            if (timeLeftGameOverDelay < 0) backToMenu();
+            /**
             // If the message is done displaying, reset
             if (timeLeftGameOverDelay < 0)
                 init();
+                */
             // else, if the game is not over
         } 
         else
