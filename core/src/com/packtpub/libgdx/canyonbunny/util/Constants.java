@@ -28,4 +28,13 @@ public class Constants
 
     // Delay after game over
     public static final float TIME_DELAY_GAME_OVER = 3;
+    
+    public static final String TEXTURE_ATLAS_UI = "images/canyonbunny-ui.pack";
+    
+    public static final String TEXTURE_ATLAS_LIBGDX_UI = "images/uiskin.atlas";
+    
+    // Location of description file for skins
+    public static final String SKIN_LIBGDX_UI = "images/uiskin.json";
+    
+    public static final String SKIN_CANYONBUNNY_UI = "images/canyonbunny-ui.json";
 }
