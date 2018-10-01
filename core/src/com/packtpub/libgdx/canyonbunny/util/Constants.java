@@ -1,5 +1,7 @@
 package com.packtpub.libgdx.canyonbunny.util;
 
+import java.util.prefs.Preferences;
+
 public class Constants
 {
     // Visible game world is 5 meters wide
@@ -28,4 +30,15 @@ public class Constants
 
     // Delay after game over
     public static final float TIME_DELAY_GAME_OVER = 3;
+    
+    public static final String TEXTURE_ATLAS_UI = "../core/assets/images/canyonbunny-ui.atlas";
+    
+    public static final String TEXTURE_ATLAS_LIBGDX_UI = "../core/assets/images/uiskin.atlas";
+    
+    // Location of description file for skins
+    public static final String SKIN_LIBGDX_UI = "../core/assets/images/uiskin.json";
+    
+    public static final String SKIN_CANYONBUNNY_UI = "../core/assets/images/canyonbunny-ui.json";
+    
+    public static final String PREFERENCES = "/CSC361_F18_G5-core/src/com/packtpub/libgdx/canyonbunny/util/GamePreferences.java";
 }
