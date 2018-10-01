@@ -250,6 +250,18 @@ public class MenuScreen extends AbstractGameScreen
                                             onPlayClicked();
                                        }
                                 });
+        layer.row();
+        // Add Options button
+        btnMenuOptions = new Button(skinCanyonBunny, "options");
+        layer.add(btnMenuOptions);
+        btnMenuOptions.addListener(new ChangeListener()
+                                   {
+                                        @Override
+                                        public void changed(ChangeEvent event, Actor actor)
+                                        {
+                                            onOptionsClicked();
+                                        }
+                                   });
         if(debugEnabled)
         {
             layer.debug();
