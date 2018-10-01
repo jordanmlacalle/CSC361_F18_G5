@@ -1,6 +1,7 @@
 package com.packtpub.libgdx.canyonbunny.game;
 
 import com.badlogic.gdx.Gdx;
+import com.packtpub.libgdx.canyonbunny.util.GamePreferences;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -162,8 +163,7 @@ public class WorldRenderer implements Disposable
         // draw extra lives icon + text (anchored to top right edge)
         renderGuiExtraLive(batch);
         // draw FPS text (anchored to bottom right edge)
-        renderGuiFpsCounter(batch);
-
+        if (GamePreferences.instance.showFpsCounter) renderGuiFpsCounter(batch);
         // draw game over text
         renderGuiGameOverMessage(batch);
 
