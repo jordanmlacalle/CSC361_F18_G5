@@ -28,6 +28,7 @@ public class WorldController extends InputAdapter
     private static final String TAG = WorldController.class.getName();
     
     public float livesVisual;
+    public float scoreVisual;
 
     /**
      * level - the current level 
@@ -106,6 +107,7 @@ public class WorldController extends InputAdapter
     private void initLevel()
     {
         score = 0;
+        scoreVisual = score;
         level = new Level(Constants.LEVEL_01);
         cameraHelper.setTarget(level.bunnyHead);
     }
@@ -180,6 +182,10 @@ public class WorldController extends InputAdapter
         if (livesVisual> lives)
         {
         	livesVisual = Math.max(lives, livesVisual - 1 * deltaTime);
+        }
+        if (scoreVisual< score)
+        {
+        	scoreVisual = Math.min(score, scoreVisual+ 250 * deltaTime);
         }
     }
 
