@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.packtpub.libgdx.canyonbunny.game.Assets;
+import com.packtpub.libgdx.canyonbunny.util.AudioManager;
 import com.packtpub.libgdx.canyonbunny.util.Constants;
 import com.packtpub.libgdx.canyonbunny.util.CharacterSkin;
 import com.packtpub.libgdx.canyonbunny.util.GamePreferences;
@@ -85,26 +87,28 @@ public class BunnyHead extends AbstractGameObject
 
         switch (jumpState)
         {
-        case GROUNDED: // Character is standing on a platform
-            if (jumpKeyPressed)
-            {
-                // Start counting jump time from the beginning
-                timeJumping = 0;
-                jumpState = JUMP_STATE.JUMP_RISING;
-            }
-            break;
-        case JUMP_RISING: // Rising in the air
-            if (!jumpKeyPressed)
-                jumpState = JUMP_STATE.JUMP_FALLING;
-            break;
-        case FALLING:// Falling down
-        case JUMP_FALLING: // Falling down after jump
-            if (jumpKeyPressed && hasFeatherPowerup)
-            {
-                timeJumping = JUMP_TIME_OFFSET_FLYING;
-                jumpState = JUMP_STATE.JUMP_RISING;
-            }
-            break;
+            case GROUNDED: // Character is standing on a platform
+                if (jumpKeyPressed)
+                {
+                    AudioManager.instance.play(Assets.instance.sounds.jump);
+                    // Start counting jump time from the beginning
+                    timeJumping = 0;
+                    jumpState = JUMP_STATE.JUMP_RISING;
+                }
+                break;
+            case JUMP_RISING: // Rising in the air
+                if (!jumpKeyPressed)
+                    jumpState = JUMP_STATE.JUMP_FALLING;
+                break;
+            case FALLING:// Falling down
+            case JUMP_FALLING: // Falling down after jump
+                if (jumpKeyPressed && hasFeatherPowerup)
+                {
+                    AudioManager.instance.play(Assets.instance.sounds.jumpWithFeather, 1, MathUtils.random(1.0f, 1.1f));
+                    timeJumping = JUMP_TIME_OFFSET_FLYING;
+                    jumpState = JUMP_STATE.JUMP_RISING;
+                }
+                break;
         }
     }
 
