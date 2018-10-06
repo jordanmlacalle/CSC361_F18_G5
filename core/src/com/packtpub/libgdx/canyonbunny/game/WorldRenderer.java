@@ -5,11 +5,17 @@ import com.packtpub.libgdx.canyonbunny.util.GamePreferences;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import com.packtpub.libgdx.canyonbunny.util.Constants;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
+
+/**
+ * WorldRenderer handles all rendering for game world objects, including GUI elements and level elements.
+ *
+ */
 public class WorldRenderer implements Disposable
 {
     private OrthographicCamera camera;
@@ -24,6 +30,9 @@ public class WorldRenderer implements Disposable
 
     private OrthographicCamera cameraGUI;
 
+    /**
+     * Initializes WorldRenderer object. Sets up the SpriteBatch used to draw objects and creates the world and UI cameras.
+     */
     private void init()
     {
         batch = new SpriteBatch();
@@ -37,12 +46,20 @@ public class WorldRenderer implements Disposable
         cameraGUI.update();
     }
 
+    /**
+     * Renders the level and GUI
+     */
     public void render()
     {
         renderWorld(batch);
         renderGui(batch);
     }
 
+    /**
+     * Renders the world using the given SpriteBatch
+     * 
+     * @param batch SpriteBatch used to draw world objects
+     */
     private void renderWorld(SpriteBatch batch)
     {
         worldController.cameraHelper.applyTo(camera);
@@ -52,6 +69,12 @@ public class WorldRenderer implements Disposable
         batch.end();
     }
 
+    /**
+     * Resizes the viewport
+     * 
+     * @param width desired width after resizing
+     * @param height desired height after resizing
+     */
     public void resize(int width, int height)
     {
         camera.viewportWidth = (Constants.VIEWPORT_HEIGHT / height) * width;
@@ -63,20 +86,44 @@ public class WorldRenderer implements Disposable
         cameraGUI.update();
     }
 
+    /**
+     * Frees memory
+     */
     @Override
     public void dispose()
     {
         batch.dispose();
     }
 
+    /**
+     * Renders score (gold coins) in top left corner of viewport
+     * 
+     * @param batch SpriteBatch used to draw score
+     */
     private void renderGuiScore(SpriteBatch batch)
     {
         float x = -15;
         float y = -15;
+        float offsetX = 50;
+        float offsetY = 50;
+        
+        // animate score 
+        if(worldController.scoreVisual < worldController.score)
+        {
+            long shakeAlpha = System.currentTimeMillis() % 360;
+            float shakeDist = 1.5f;
+            offsetX += MathUtils.sinDeg(shakeAlpha * 2.2f) * shakeDist;
+            offsetY += MathUtils.sinDeg(shakeAlpha * 2.9f) * shakeDist;
+        }
         batch.draw(Assets.instance.goldCoin.goldCoin, x, y, 50, 50, 100, 100, 0.35f, -0.35f, 0);
         Assets.instance.fonts.defaultBig.draw(batch, "" + worldController.score, x + 75, y + 37);
     }
 
+    /**
+     * Renders extra lives (represented by bunny heads) in top right corner of viewport
+     * 
+     * @param batch SpriteBatch used to draw extra lives
+     */
     private void renderGuiExtraLive(SpriteBatch batch)
     {
         float x = cameraGUI.viewportWidth - 50 - Constants.LIVES_START * 50;
@@ -88,8 +135,24 @@ public class WorldRenderer implements Disposable
             batch.draw(Assets.instance.bunny.head, x + i * 50, y, 50, 50, 120, 100, 0.35f, -0.35f, 0);
             batch.setColor(1, 1, 1, 1);
         }
+        
+        if(worldController.lives >= 0 && worldController.livesVisual > worldController.lives)
+        {
+            int i = worldController.lives;
+            float alphaColor = Math.max(0, worldController.livesVisual - worldController.lives - 0.5f);
+            float alphaScale = 0.35f * (2 + worldController.lives - worldController.livesVisual) * 2;
+            float alphaRotate = -45 * alphaColor;
+            batch.setColor(1.0f, 0.7f, 0.7f, alphaColor);
+            batch.draw(Assets.instance.bunny.head, x + i * 50, y, 50, 50, 120, 100, alphaScale, -alphaScale, alphaRotate);
+            batch.setColor(1, 1, 1, 1);
+        }
     }
 
+    /**
+     * Renders FPS counter in bottom right of viewport
+     * 
+     * @param batch SpriteBatch used to draw FPS counter
+     */
     private void renderGuiFpsCounter(SpriteBatch batch)
     {
         float x = cameraGUI.viewportWidth - 55;
@@ -115,6 +178,11 @@ public class WorldRenderer implements Disposable
         fpsFont.setColor(1, 1, 1, 1); // white
     }
 
+    /**
+     * Renders the feather powerup icon and countdown that is displayed when a feather is picked up.
+     * 
+     * @param batch SpriteBatch used to draw powerup icon and timeout countdown
+     */
     private void renderGuiFeatherPowerup(SpriteBatch batch)
     {
         float x = -15;
@@ -138,6 +206,11 @@ public class WorldRenderer implements Disposable
         }
     }
 
+    /**
+     * Renders the "Game Over" message that is displayed when the player runs out of lives
+     * 
+     * @param batch SpriteBatch used to draw "Game Over" message
+     */
     private void renderGuiGameOverMessage(SpriteBatch batch)
     {
         float x = cameraGUI.viewportWidth / 2;
@@ -151,6 +224,11 @@ public class WorldRenderer implements Disposable
         }
     }
 
+    /**
+     * Renders GUI elements
+     * 
+     * @param batch SpriteBatch used to draw GUI elements
+     */
     private void renderGui(SpriteBatch batch)
     {
         batch.setProjectionMatrix(cameraGUI.combined);

@@ -26,6 +26,9 @@ import com.badlogic.gdx.utils.Array;
 public class WorldController extends InputAdapter
 {
     private static final String TAG = WorldController.class.getName();
+    
+    public float livesVisual;
+    public float scoreVisual;
 
     /**
      * level - the current level 
@@ -93,6 +96,7 @@ public class WorldController extends InputAdapter
         Gdx.input.setInputProcessor(this);
         cameraHelper = new CameraHelper();
         lives = Constants.LIVES_START;
+        livesVisual = lives;
         timeLeftGameOverDelay = 0;
         initLevel();
     }
@@ -103,6 +107,7 @@ public class WorldController extends InputAdapter
     private void initLevel()
     {
         score = 0;
+        scoreVisual = score;
         level = new Level(Constants.LEVEL_01);
         cameraHelper.setTarget(level.bunnyHead);
     }
@@ -172,6 +177,15 @@ public class WorldController extends InputAdapter
             else
                 // reset the level
                 initLevel();
+        }
+        level.mountains.updateScrollPosition(cameraHelper.getPosition());
+        if (livesVisual> lives)
+        {
+        	livesVisual = Math.max(lives, livesVisual - 1 * deltaTime);
+        }
+        if (scoreVisual< score)
+        {
+        	scoreVisual = Math.min(score, scoreVisual+ 250 * deltaTime);
         }
     }
 
