@@ -22,6 +22,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.utils.Array;
+import com.packtpub.libgdx.canyonbunny.util.AudioManager;
 
 public class WorldController extends InputAdapter
 {
@@ -168,6 +169,7 @@ public class WorldController extends InputAdapter
         // if the game is not over and the player is in the water..
         if (!isGameOver() && isPlayerInWater())
         {
+        	AudioManager.instance.play(Assets.instance.sounds.liveLost);
             // decrement player lives remaining
             lives--;
             // after decrementing lives, check if game is over (out of lives)
@@ -355,6 +357,7 @@ public class WorldController extends InputAdapter
     private void onCollisionBunnyWithGoldCoin(GoldCoin goldCoin)
     {
         goldCoin.collected = true;
+        AudioManager.instance.play(Assets.instance.sounds.pickupCoin);
         score += goldCoin.getScore();
         Gdx.app.log(TAG, "Gold coin collected");
     }
@@ -370,6 +373,7 @@ public class WorldController extends InputAdapter
     private void onCollisionBunnyWithFeather(Feather feather)
     {
         feather.collected = true;
+        AudioManager.instance.play(Assets.instance.sounds.pickupFeather);
         score += feather.getScore();
         level.bunnyHead.setFeatherPowerup(true);
         Gdx.app.log(TAG, "Feather collected");
