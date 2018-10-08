@@ -5,9 +5,11 @@ import com.packtpub.libgdx.canyonbunny.screens.MenuScreen;
 import com.packtpub.libgdx.canyonbunny.util.CameraHelper;
 import com.packtpub.libgdx.canyonbunny.game.objects.BunnyHead;
 import com.packtpub.libgdx.canyonbunny.game.objects.BunnyHead.JUMP_STATE;
+import com.packtpub.libgdx.canyonbunny.game.objects.Carrot;
 import com.packtpub.libgdx.canyonbunny.game.objects.Feather;
 import com.packtpub.libgdx.canyonbunny.game.objects.GoldCoin;
 import com.packtpub.libgdx.canyonbunny.game.objects.Rock;
+import com.packtpub.libgdx.canyonbunny.util.AudioManager;
 import com.packtpub.libgdx.canyonbunny.util.Constants;
 
 import com.badlogic.gdx.Application.ApplicationType;
@@ -18,11 +20,18 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.utils.Array;
-import com.packtpub.libgdx.canyonbunny.util.AudioManager;
+
 
 public class WorldController extends InputAdapter
 {
@@ -40,14 +49,12 @@ public class WorldController extends InputAdapter
     public int lives;
     public int score;
     
-    private Game game;
-    private void backToMenu () {
-      // switch to menu screen
-      game.setScreen(new MenuScreen(game));
-    }
-
     public CameraHelper cameraHelper;
-
+    public World b2world;
+    
+    private Game game;
+    // Whether or not the player has reached the goal
+    private boolean goalReached;
     /**
      * timeleftGameOverDelay - the time remaining for the Game Over message
      */
@@ -64,6 +71,14 @@ public class WorldController extends InputAdapter
         init();
     }
 
+    /**
+     * Return player to menu screen
+     */
+    private void backToMenu() {
+      // switch to menu screen
+      game.setScreen(new MenuScreen(game));
+    }
+    
     /**
      * Handles some special inputs for resetting game world and switching camera target
      * @param keycode the keycode for the pressed key
@@ -111,6 +126,39 @@ public class WorldController extends InputAdapter
         scoreVisual = score;
         level = new Level(Constants.LEVEL_01);
         cameraHelper.setTarget(level.bunnyHead);
+    }
+    
+    /**
+     * Initializes Box2D world and physics for objects in the level
+     */
+    private void initPhysics()
+    {
+        // Initializing physics, should clear Box2D world
+        if(b2world != null)
+            b2world.dispose();
+        
+        // Rocks
+        Vector2 origin = new Vector2();
+        for(Rock rock : level.rocks)
+        {
+            // Create new body for rock
+            BodyDef bodyDef = new BodyDef();
+            // Rock is kinematic, it moves and collides but should not BE moved
+            bodyDef.type = BodyType.KinematicBody;
+            bodyDef.position.set(rock.position);
+            // Create new body using body definition
+            Body body = b2world.createBody(bodyDef);
+            rock.body = body;
+            PolygonShape polygonShape = new PolygonShape();
+            origin.x = rock.bounds.width / 2.0f;
+            origin.y = rock.bounds.height / 2.0f;
+            polygonShape.setAsBox(rock.bounds.width / 2.0f, rock.bounds.height / 2.0f, origin, 0);
+            FixtureDef fixtureDef = new FixtureDef();
+            fixtureDef.shape = polygonShape;
+            body.createFixture(fixtureDef);
+            polygonShape.dispose();
+        }
+        
     }
 
     /**
