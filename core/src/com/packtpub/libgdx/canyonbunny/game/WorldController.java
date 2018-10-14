@@ -124,8 +124,10 @@ public class WorldController extends InputAdapter
     {
         score = 0;
         scoreVisual = score;
+        goalReached = false;
         level = new Level(Constants.LEVEL_01);
         cameraHelper.setTarget(level.bunnyHead);
+        initPhysics();
     }
     
     /**
@@ -193,7 +195,7 @@ public class WorldController extends InputAdapter
     {
         handleDebugInput(deltaTime);
         // Check for game over
-        if (isGameOver())
+        if (isGameOver() || goalReached)
         {
             // Decrement Game Over message time by deltaTime
             timeLeftGameOverDelay -= deltaTime;
@@ -213,6 +215,7 @@ public class WorldController extends InputAdapter
         // update the level
         level.update(deltaTime);
         testCollisions();
+        b2world.step(deltaTime, 8, 3);
         cameraHelper.update(deltaTime);
         // if the game is not over and the player is in the water..
         if (!isGameOver() && isPlayerInWater())
@@ -426,6 +429,20 @@ public class WorldController extends InputAdapter
         level.bunnyHead.setFeatherPowerup(true);
         Gdx.app.log(TAG, "Feather collected");
     }
+    
+    /**
+     * Defines how the collision between the BunnyHead and the Goal is handled.
+     * Disables unnecessary collision testing by setting goalReached to true.
+     * Starts countdown to switch back to menu screen and spawns carrots.
+     */
+    private void onCollisionBunnyWithGoal()
+    {
+        goalReached = true;
+        timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_FINISHED;
+        Vector2 centerPosBunnyHead = new Vector2(level.bunnyHead.position);
+        centerPosBunnyHead.x += level.bunnyHead.bounds.width;
+        spawnCarrots(centerPosBunnyHead, Constants.CARROTS_SPAWN_MAX, Constants.CARROTS_SPAWN_RADIUS);
+    }
 
     /**
      * Check for collisions between BunnyHead and other level objects
@@ -470,6 +487,17 @@ public class WorldController extends InputAdapter
                           // iteration
             onCollisionBunnyWithFeather(feather);
             break;
+        }
+        
+        // Test collision: BunnyHead <-> Goal
+        if(!goalReached)
+        {
+            r2.set(level.goal.bounds);
+            r2.x += level.goal.position.x;
+            r2.y += level.goal.postion.y;
+            
+            if(r1.overlaps(r2))
+                onCollisionBunnyWithGoal();
         }
     }
     
