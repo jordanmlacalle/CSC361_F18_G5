@@ -31,9 +31,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 
 
-public class WorldController extends InputAdapter
+public class WorldController extends InputAdapter implements Disposable
 {
     private static final String TAG = WorldController.class.getName();
     
@@ -77,6 +78,16 @@ public class WorldController extends InputAdapter
     private void backToMenu() {
       // switch to menu screen
       game.setScreen(new MenuScreen(game));
+    }
+    
+    /**
+     * Disposes b2d memory
+     */
+    @Override
+    public void dispose()
+    {
+        if(b2world != null)
+            b2world.dispose();
     }
     
     /**
