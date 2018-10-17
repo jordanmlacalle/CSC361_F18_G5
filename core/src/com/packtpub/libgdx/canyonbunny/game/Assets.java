@@ -32,6 +32,7 @@ public class Assets implements Disposable, AssetErrorListener
     public AssetSounds sounds;
     public AssetMusic music;
 
+    //an instance of the asset manager 
     private AssetManager assetManager;
 
     // singleton: prevent instantiation from other classes
@@ -39,6 +40,9 @@ public class Assets implements Disposable, AssetErrorListener
     {
     }
     
+    /**
+     *	Gets the sounds needed for the game
+     */
     public class AssetSounds {
         public final Sound jump;
         public final Sound jumpWithFeather;
@@ -57,6 +61,9 @@ public class Assets implements Disposable, AssetErrorListener
      }
     
     
+    /**
+     * Gets the in-game music
+     */
       public class AssetMusic {
         public final Music song01;
         public AssetMusic (AssetManager am) {
@@ -66,7 +73,11 @@ public class Assets implements Disposable, AssetErrorListener
 
 
     public AssetFonts fonts;
-
+    
+    /**
+     * Gathers fonts to be used for text necessary to provide the user information while playing
+     * the game.
+     */
     public class AssetFonts
     {
         public final BitmapFont defaultSmall;
@@ -91,7 +102,11 @@ public class Assets implements Disposable, AssetErrorListener
             defaultBig.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
         }
     }
-
+    
+    /**
+     * Initializes the AssetManager
+     * @param assetManager - asset manager to be initialized
+     */
     public void init(AssetManager assetManager)
     {
         this.assetManager = assetManager;
@@ -134,7 +149,10 @@ public class Assets implements Disposable, AssetErrorListener
         sounds = new AssetSounds(assetManager);
         music = new AssetMusic(assetManager);
     }
-
+    
+    /**
+     * Clears memory
+     */
     @Override
     public void dispose()
     {
@@ -199,7 +217,11 @@ public class Assets implements Disposable, AssetErrorListener
             feather = atlas.findRegion("item_feather");
         }
     }
-
+    
+    /**
+     * Class to gather instances of images to be used within the game.
+     *
+     */
     public class AssetLevelDecoration
     {
         public final AtlasRegion cloud01;
@@ -210,7 +232,11 @@ public class Assets implements Disposable, AssetErrorListener
         public final AtlasRegion waterOverlay;
         public final AtlasRegion carrot;
         public final AtlasRegion goal;
-
+        
+        /**
+         * Gets required images from a texture atlas, and sets them as instance variables for operation
+         * @param atlas - the texture atlas used to retrieve images
+         */
         public AssetLevelDecoration(TextureAtlas atlas)
         {
             cloud01 = atlas.findRegion("cloud01");
