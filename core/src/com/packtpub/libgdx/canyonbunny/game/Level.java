@@ -1,5 +1,7 @@
 package com.packtpub.libgdx.canyonbunny.game;
 
+import com.packtpub.libgdx.canyonbunny.game.objects.Carrot;
+import com.packtpub.libgdx.canyonbunny.game.objects.Goal;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,6 +19,10 @@ public class Level
 {
     public static final String TAG = Level.class.getName();
 
+
+    public Array<Carrot> carrots;
+    public Goal goal;
+    
     /**
      * BLOCK_TYPE is used to identify different objects in a Level. Each object has
      * a unique RGBA color value.
@@ -27,6 +33,7 @@ public class Level
     public enum BLOCK_TYPE
     {
         EMPTY(0, 0, 0), // Black
+        GOAL(255, 0, 0), // red
         ROCK(0, 255, 0), // Green
         PLAYER_SPAWNPOINT(255, 255, 255), // White
         ITEM_FEATHER(255, 0, 255), // Purple
@@ -102,6 +109,7 @@ public class Level
         rocks = new Array<Rock>();
         goldcoins = new Array<GoldCoin>();
         feathers = new Array<Feather>();
+        carrots = new Array<Carrot>();
 
         // Load image file that represents the level data
         Pixmap pixmap = new Pixmap(Gdx.files.internal(filename));
@@ -161,7 +169,12 @@ public class Level
                     offsetHeight = -1.5f;
                     obj.position.set(pixelX, baseHeight * obj.dimension.y + offsetHeight);
                     goldcoins.add((GoldCoin) obj);
-                } 
+                    //goal
+                } else if (BLOCK_TYPE.GOAL.sameColor(currentPixel)) {
+                	   obj = new Goal();
+                	   offsetHeight = -7.0f;
+                	   obj.position.set(pixelX, baseHeight + offsetHeight);
+                	   goal = (Goal)obj;
                 else
                 {
                     // decode currentPixel color
@@ -198,6 +211,9 @@ public class Level
     {
         // Draw Mountains
         mountains.render(batch);
+        
+        // Draw Goal
+        goal.render(batch);
 
         // Draw Rocks
         for (Rock rock : rocks)
@@ -210,6 +226,10 @@ public class Level
         // Draw Feathers
         for (Feather feather : feathers)
             feather.render(batch);
+        
+        // Draw Carrots
+        for (Carrot carrot : carrots)
+        	carrot.render(batch);
 
         // Draw Player Character
         bunnyHead.render(batch);
@@ -235,6 +255,8 @@ public class Level
             goldCoin.update(deltaTime);
         for (Feather feather : feathers)
             feather.update(deltaTime);
+        for (Carrot carrot : carrots) 
+        	carrot.update(deltaTime);
         clouds.update(deltaTime);
     }
 
