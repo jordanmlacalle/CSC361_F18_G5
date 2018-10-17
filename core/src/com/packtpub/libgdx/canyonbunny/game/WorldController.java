@@ -505,7 +505,7 @@ public class WorldController extends InputAdapter implements Disposable
         {
             r2.set(level.goal.bounds);
             r2.x += level.goal.position.x;
-            r2.y += level.goal.postion.y;
+            r2.y += level.goal.position.y;
             
             if(r1.overlaps(r2))
                 onCollisionBunnyWithGoal();
