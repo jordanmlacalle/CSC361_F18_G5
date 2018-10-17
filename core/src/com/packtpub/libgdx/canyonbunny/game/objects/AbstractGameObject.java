@@ -1,5 +1,6 @@
 package com.packtpub.libgdx.canyonbunny.game.objects;
 
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Rectangle;
@@ -12,7 +13,8 @@ public abstract class AbstractGameObject
     public Vector2 origin;
     public Vector2 scale;
     public float rotation;
-
+    public Body body;
+    
     // objects current speed in m/s
     public Vector2 velocity;
     // objects positive and negative max speed in m/s
@@ -43,11 +45,17 @@ public abstract class AbstractGameObject
 
     public void update(float deltaTime)
     {
-        updateMotionX(deltaTime);
-        updateMotionY(deltaTime);
-        // move to new position
-        position.x += velocity.x * deltaTime;
-        position.y += velocity.y * deltaTime;
+
+    	if (body == null) {
+    		updateMotionX(deltaTime);
+    		updateMotionY(deltaTime);
+    		// move to new position
+    		position.x += velocity.x * deltaTime;
+    		position.y += velocity.y * deltaTime;
+    	} else {
+    		   position.set(body.getPosition());
+    		   rotation = body.getAngle() * MathUtils.radiansToDegrees;
+    	}
     }
 
     public abstract void render(SpriteBatch batch);
