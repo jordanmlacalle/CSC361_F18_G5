@@ -210,14 +210,15 @@ public class WorldController extends InputAdapter implements Disposable
         // Check for game over
         if (isGameOver() || goalReached)
         {
+         
             // Decrement Game Over message time by deltaTime
             timeLeftGameOverDelay -= deltaTime;
-            if (timeLeftGameOverDelay < 0) backToMenu();
-            /**
-            // If the message is done displaying, reset
+            
             if (timeLeftGameOverDelay < 0)
-                init();
-                */
+            {
+                backToMenu();
+                return;
+            }
             // else, if the game is not over
         } 
         else
