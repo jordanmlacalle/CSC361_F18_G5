@@ -131,6 +131,17 @@ public class Rock extends AbstractGameObject
         // decrement cycle time
         floatCycleTimeLeft -= deltaTime;
         // set target position if it has not been set yet
+        if (floatCycleTimeLeft<= 0) {
+        	   floatCycleTimeLeft = FLOAT_CYCLE_TIME;
+        	   floatingDownwards = !floatingDownwards;
+        	   body.setLinearVelocity(0, FLOAT_AMPLITUDE
+        	    * (floatingDownwards ? -1 : 1));
+        	     } else {
+        	   body.setLinearVelocity(body.getLinearVelocity().scl(0.98f));
+        	} 
+        }
+        //below was removed with updates from ch 11
+        /*
         if(floatTargetPosition == null)
         {
             floatTargetPosition = new Vector2(position);
@@ -149,5 +160,6 @@ public class Rock extends AbstractGameObject
         
         position.lerp(floatTargetPosition, deltaTime);
     }
+    */
 
 }
