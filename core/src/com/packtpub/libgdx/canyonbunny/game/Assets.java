@@ -208,6 +208,8 @@ public class Assets implements Disposable, AssetErrorListener
         public final AtlasRegion mountainLeft;
         public final AtlasRegion mountainRight;
         public final AtlasRegion waterOverlay;
+        public final AtlasRegion carrot;
+        public final AtlasRegion goal;
 
         public AssetLevelDecoration(TextureAtlas atlas)
         {
@@ -217,6 +219,8 @@ public class Assets implements Disposable, AssetErrorListener
             mountainLeft = atlas.findRegion("mountain_left");
             mountainRight = atlas.findRegion("mountain_right");
             waterOverlay = atlas.findRegion("water_overlay");
+            carrot = atlas.findRegion("carrot");
+            goal = atlas.findRegion("goal");
         }
     }
 }
