@@ -12,7 +12,6 @@ public class GoldCoin extends AbstractGameObject
      * regGoldCoin - texture region with gold coin image 
      * collected - flag marking this coin as collected or not collected
      */
-    private TextureRegion regGoldCoin;
     public boolean collected;
 
     public GoldCoin()
@@ -31,7 +30,6 @@ public class GoldCoin extends AbstractGameObject
         setAnimation(Assets.instance.goldCoin.animGoldCoin);
         // Set coin to random frame in animation
         stateTime = MathUtils.random(0.0f, 1.0f);
-        regGoldCoin = Assets.instance.goldCoin.goldCoin;
 
         // Set bounding box for collision detection
         bounds.set(0, 0, dimension.x, dimension.y);
