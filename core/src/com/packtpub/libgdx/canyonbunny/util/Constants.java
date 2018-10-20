@@ -17,7 +17,7 @@ public class Constants
     public static final float VIEWPORT_GUI_HEIGHT = 480.0f;
 
     // Location of description file for texture atlas
-    public static final String TEXTURE_ATLAS_OBJECTS = "../core/assets/images/canyonbunny.atlas";
+    public static final String TEXTURE_ATLAS_OBJECTS = "images/canyonbunny.atlas";
 
     // Location of image file for level 01
     public static final String LEVEL_01 = "levels/level-01.png";
@@ -41,4 +41,13 @@ public class Constants
     public static final String SKIN_CANYONBUNNY_UI = "images/canyonbunny-ui.json";
     
     public static final String PREFERENCES = "/CSC361_F18_G5-core/src/com/packtpub/libgdx/canyonbunny/util/GamePreferences.java";
+    
+    // Number of carrots to spawn
+    public static final int CARROTS_SPAWN_MAX = 100;
+    
+    // Spawn radius for carrots
+    public static final float CARROTS_SPAWN_RADIUS = 3.5f;
+    
+    // Delay after game finished
+    public static final float TIME_DELAY_GAME_FINISHED = 6;
 }

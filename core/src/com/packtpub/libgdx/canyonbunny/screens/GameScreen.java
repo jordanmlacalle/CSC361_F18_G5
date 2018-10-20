@@ -47,6 +47,7 @@ package com.packtpub.libgdx.canyonbunny.screens;
      
      @Override
      	public void hide () {
+    	 worldController.dispose();
          worldRenderer.dispose();
          Gdx.input.setCatchBackKey(false);
      	}
