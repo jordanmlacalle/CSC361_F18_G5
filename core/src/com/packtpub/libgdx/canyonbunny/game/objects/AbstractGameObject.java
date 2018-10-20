@@ -3,6 +3,7 @@ package com.packtpub.libgdx.canyonbunny.game.objects;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.MathUtils;
@@ -42,7 +43,7 @@ public abstract class AbstractGameObject
      * animation - the current animation
      */
     public float stateTime;
-    public Animation animation;
+    public Animation<TextureRegion> animation;
 
     public AbstractGameObject()
     {
@@ -143,7 +144,7 @@ public abstract class AbstractGameObject
      * 
      * @param animation - the desired animation
      */
-    public void setAnimation(Animation animation)
+    public void setAnimation(Animation<TextureRegion> animation)
     {
         this.animation = animation;
         stateTime = 0;
