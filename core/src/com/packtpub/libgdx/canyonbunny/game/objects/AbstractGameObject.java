@@ -1,6 +1,7 @@
 package com.packtpub.libgdx.canyonbunny.game.objects;
 
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Rectangle;
@@ -8,6 +9,14 @@ import com.badlogic.gdx.math.MathUtils;
 
 public abstract class AbstractGameObject
 {
+    /**
+     * position  - vector representing an objects coordinates in game world
+     * dimension - the dimensions of the object
+     * origin    - positon of the objects origin
+     * scale     - scale of the object
+     * rotation  - angle at which the object is currently oriented
+     * body      - objects Box2D body
+     */
     public Vector2 position;
     public Vector2 dimension;
     public Vector2 origin;
@@ -27,6 +36,13 @@ public abstract class AbstractGameObject
     public Vector2 acceleration;
     // the physical body that will be used for collision detection w other objects
     public Rectangle bounds;
+    
+    /**
+     * stateTime - where we are in the current animation
+     * animation - the current animation
+     */
+    public float stateTime;
+    public Animation animation;
 
     public AbstractGameObject()
     {
@@ -43,23 +59,37 @@ public abstract class AbstractGameObject
         bounds = new Rectangle();
     }
 
+    /**
+     * Updates the object based on the time passed since the last frame
+     * 
+     * @param deltaTime - the time passed since the last frame
+     */
     public void update(float deltaTime)
     {
-
-    	if (body == null) {
+        stateTime += deltaTime;
+        
+    	if (body == null)
+    	{
     		updateMotionX(deltaTime);
     		updateMotionY(deltaTime);
     		// move to new position
     		position.x += velocity.x * deltaTime;
     		position.y += velocity.y * deltaTime;
-    	} else {
-    		   position.set(body.getPosition());
-    		   rotation = body.getAngle() * MathUtils.radiansToDegrees;
+    	} 
+    	else 
+    	{
+		   position.set(body.getPosition());
+		   rotation = body.getAngle() * MathUtils.radiansToDegrees;
     	}
     }
 
     public abstract void render(SpriteBatch batch);
 
+    /**
+     * Updates the object's X axis motion based on the time passed since the last frame
+     * 
+     * @param deltaTime - the time passed since the last frame
+     */
     protected void updateMotionX(float deltaTime)
     {
         if (velocity.x != 0)
@@ -81,6 +111,11 @@ public abstract class AbstractGameObject
         velocity.x = MathUtils.clamp(velocity.x, -terminalVelocity.x, terminalVelocity.x);
     }
 
+    /**
+     * Updates the object's Y axis motion based on the time passed since the last frame
+     * 
+     * @param deltaTime - the time passed since the last frame
+     */
     public void updateMotionY(float deltaTime)
     {
         if (velocity.y != 0)
@@ -100,5 +135,17 @@ public abstract class AbstractGameObject
         // Make sure the object's velocity does not exceed the positive
         // or negative terminal velocity.
         velocity.y = MathUtils.clamp(velocity.y, -terminalVelocity.y, terminalVelocity.y);
+    }
+    
+    /**
+     * Sets this object's current animation to the given animation
+     * Resets state time to 0.
+     * 
+     * @param animation - the desired animation
+     */
+    public void setAnimation(Animation animation)
+    {
+        this.animation = animation;
+        stateTime = 0;
     }
 }
