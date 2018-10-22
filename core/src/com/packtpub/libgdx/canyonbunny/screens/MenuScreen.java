@@ -295,8 +295,8 @@ public class MenuScreen extends AbstractGameScreen
         
         // Make options window slightly transparent
         winOptions.setColor(1, 1, 1, 0.8f);
-        // Hide options window by default
-        winOptions.setVisible(false);
+     // Hide options window by default 
+        showOptionsWindow(false, false);
         
         if(debugEnabled)
         {
@@ -454,9 +454,12 @@ public class MenuScreen extends AbstractGameScreen
      */
     private void onOptionsClicked()
     {
+    	
         loadSettings();
         btnMenuPlay.setVisible(false);
         btnMenuOptions.setVisible(false);
+        showMenuButtons(false); 
+        showOptionsWindow(true, true);
         winOptions.setVisible(true);
     }
     
@@ -519,6 +522,8 @@ public class MenuScreen extends AbstractGameScreen
      */
     private void onCancelClicked()
     {
+    	showMenuButtons(true); 
+    	showOptionsWindow(false, true);
         btnMenuPlay.setVisible(true);
         btnMenuOptions.setVisible(true);
         winOptions.setVisible(false);
