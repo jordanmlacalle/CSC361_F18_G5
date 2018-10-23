@@ -1,20 +1,22 @@
 package com.packtpub.libgdx.canyonbunny.game;
 
+
+
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-
-import java.io.File;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.Array;
 import com.packtpub.libgdx.canyonbunny.util.Constants;
 
 public class Assets implements Disposable, AssetErrorListener
@@ -176,16 +178,53 @@ public class Assets implements Disposable, AssetErrorListener
         Gdx.app.error(TAG, "Couldn't load asset '" + asset.fileName + "'", (Exception) throwable);
     }
 
+    /**
+     * Class that acts as a container for Bunny assets
+     *
+     */
     public class AssetBunny
     {
         public final AtlasRegion head;
-
+        public final Animation<TextureRegion> animNormal;
+        public final Animation<TextureRegion> animCopterTransform;
+        public final Animation<TextureRegion> animCopterTransformBack;
+        public final Animation<TextureRegion> animCopterRotate;
+        
+        /**
+         * Instantiates AssetBunny and initializes members.
+         * @param atlas the texture atlas containing the assets for the Bunny
+         */
         public AssetBunny(TextureAtlas atlas)
         {
             head = atlas.findRegion("bunny_head");
+            
+            Array<AtlasRegion> regions = null;
+            AtlasRegion region = null;
+            
+            // Animation: Bunny Normal
+            regions = atlas.findRegions("anim_bunny_normal");
+            animNormal = new Animation<TextureRegion>(1.0f / 10.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
+            
+            // Animation: Bunny Copter - knot ears
+            regions = atlas.findRegions("anim_bunny_copter");
+            animCopterTransform = new Animation<TextureRegion>(1.0f / 10.0f, regions);
+            
+            // Animation: Bunny Copter - unknot ears
+            regions = atlas.findRegions("anim_bunny_copter");
+            animCopterTransformBack = new Animation<TextureRegion>(1.0f / 10.0f, regions, Animation.PlayMode.REVERSED);
+            
+            // Animation: Bunny Copter - rotate ears
+            regions = new Array<AtlasRegion>();
+            regions.add(atlas.findRegion("anim_bunny_copter", 4));
+            regions.add(atlas.findRegion("anim_bunny_copter", 5));
+            animCopterRotate = new Animation<TextureRegion>(1.0f / 15.0f, regions);
+            
         }
     }
 
+    /**
+     * Class that acts as a container for Rock assets
+     */
     public class AssetRock
     {
         public final AtlasRegion edge;
@@ -198,20 +237,50 @@ public class Assets implements Disposable, AssetErrorListener
         }
     }
 
+    /**
+     * Class that acts as a container for gold coin assets
+     */
     public class AssetGoldCoin
     {
+        /**
+         * goldCoin - the region from the atlas containing the image for the gold coin
+         * animGoldCoin - the animation for the gold coin
+         */
         public final AtlasRegion goldCoin;
-
+        public final Animation<TextureRegion> animGoldCoin;
+        
+        /**
+         * Instantiates AssetGoldCoin and initializes members.
+         * @param atlas the texture atlas containing the image assets
+         */
         public AssetGoldCoin(TextureAtlas atlas)
         {
             goldCoin = atlas.findRegion("item_gold_coin");
+            
+            // Animation: Gold Coin
+            Array<AtlasRegion> regions = atlas.findRegions("anim_gold_coin");
+            AtlasRegion region = regions.first();
+            
+            for(int i = 0; i < 10; i++)
+            {
+                regions.insert(0,  region);
+            }
+            
+            animGoldCoin = new Animation<TextureRegion>(1.0f / 20.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
         }
     }
 
+    /**
+     * Class that acts as a container for Feather assets
+     */
     public class AssetFeather
     {
         public final AtlasRegion feather;
 
+        /**
+         * Instantiates AssetFeather and initializes members
+         * @param atlas
+         */
         public AssetFeather(TextureAtlas atlas)
         {
             feather = atlas.findRegion("item_feather");
