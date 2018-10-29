@@ -8,28 +8,18 @@ import com.packtpub.libgdx.canyonbunny.CanyonBunnyMain;
 
 public class DesktopLauncher {
 	
-	private static boolean rebuildAtlas = true;
+	private static boolean rebuildAtlas = false;
     private static boolean drawDebugOutline = false;
 	
 	public static void main (String[] arg) {
-		/**   
-		if (rebuildAtlas) {
-            Settings settings = new Settings();
-            settings.maxWidth = 1024;
-            settings.maxHeight = 1024;
-            settings.duplicatePadding = false;
-            settings.debug = drawDebugOutline;
-            TexturePacker.process(settings, "assets-raw/images", "../core/assets/images","canyonbunny");
-		}
-		*/
 		
 		if (rebuildAtlas) {
 		      Settings settings = new Settings();
 		      settings.maxWidth = 1024;
 		      settings.maxHeight = 1024;
 		      settings.debug = drawDebugOutline;
-		      TexturePacker.process(settings, "assets-raw/images","images","canyonbunny");
-		      TexturePacker.process(settings, "assets-raw/images-ui","images","canyonbunny-ui");
+		      TexturePacker.process(settings, "../../desktop/assets-raw/images","images","canyonbunny");
+		      TexturePacker.process(settings, "../../desktop/assets-raw/images-ui","images","canyonbunny-ui");
 		}
 		
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
